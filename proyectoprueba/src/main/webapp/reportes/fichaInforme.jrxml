@@ -1,0 +1,746 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="fichaInforme" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="54dbe489-b22c-445b-a441-4cb85abe001a">
+    <property name="ireport.zoom" value="1.0"/>
+    <property name="ireport.x" value="0"/>
+    <property name="ireport.y" value="0"/>
+    <parameter name="TITULO" class="java.lang.String">
+        <defaultValueExpression><![CDATA["FICHA"]]></defaultValueExpression>
+    </parameter>
+    <parameter name="NUMERO" class="java.lang.String">
+        <defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+    </parameter>
+    <parameter name="USUARIO" class="java.lang.String">
+        <defaultValueExpression><![CDATA["Sistema"]]></defaultValueExpression>
+    </parameter>
+    <parameter name="FECHA" class="java.util.Date">
+        <defaultValueExpression><![CDATA[new java.util.Date()]]></defaultValueExpression>
+    </parameter>
+    <field name="tipo" class="java.lang.String"/>
+    <field name="n" class="java.lang.String"/>
+    <field name="c1" class="java.lang.String"/>
+    <field name="c2" class="java.lang.String"/>
+    <field name="c3" class="java.lang.String"/>
+    <field name="c4" class="java.lang.String"/>
+    <field name="c5" class="java.lang.String"/>
+    <field name="c6" class="java.lang.String"/>
+    <field name="c7" class="java.lang.String"/>
+    <title>
+        <band height="70" splitType="Stretch">
+            <image scaleImage="RetainShape" onErrorType="Blank">
+                <reportElement x="0" y="0" width="38" height="38"/>
+                <imageExpression><![CDATA[new java.io.ByteArrayInputStream(java.util.Base64.getDecoder().decode("iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAAASFBMVEX//////v////3+///+/v/+/v7+//n4//Hg9bnH73K86lC45kSl1DOgzy6ZxzJ1qDBxojJ9hXFAfGgzaXIuWyQOQmwqPk4yNzsx9yMOAAAJ2UlEQVR42rVbiWKjOAwlhmc3KQGaodn//9P1AViSD47MaNopIYeeJVmn0zRoLGH5zRPW/5G5nXtMn4El8gR9JF/lUSh34X/C6+OnuUvwR8hypDf852L9lO2Dl48K138I9Y4M4yLWiLgUzhzJktv/smQgliYBDOZW1sYRWvWJAgCluLQEgOdgQDRGpIGy+rnMFpspAWgUFy4D8HxaALeSZo+tfqMSgMUGmgwAy//Za3vTgVRKQTUKXBInqAqgyQIYhuFxN3lim6b0gJpB0QY034ytpwji9d0PT78d+uFOCPh07akcIuKWiuG5EQWgsK/1ywCaAwAalfNfeST/BgAnVd4b+FgFfREAIn8It35JAlg9NwXweDyGx5AAkLsiv3rln7Mc5gMAwMMHSopIpeEBxWiwubVWafKK+SiAzX+XAHgHWQZArJEBqEoA1Ln5C8UB9JR7VgLbtkBU5nEA0YchhvYsgLIKrJ8OgcW9WwcsJyTQkTBnH3XWHRoC4D54shb5KAAgpDbzM8wG5rlkjO4tGltkvnW/kf5I2rXHu9vI5p4nyfqHEPRqBbsA+ioAp8BLANRqge2uBPoaALsQXAbgM9H2MxVojU5fALBupFvzIQCbuuhPADSo20Bv/w01AEZrYz4BYI3YbsPOEBhTpJiuJdT7n+Alh77PgZMA3q/3+/3iABZXxORwDAAVSQC0D8CTlIALBHwvjCcA9J8BCMUTxGbc2I9nJPC8AAAxxdkF0Pf/AMCCQDlJ2HiABMUYokJB+F+Oyffj8b3Qs2KJxvn/EDsXAGk616UApqGm/S9L9+9INTGYbbk6BbD6pPYUgOdFAEQCoAlN3hKHp0xOTktglqmwkEBLugo5AH3F/j8EAFp6Iw/AeeLU/v0N6wOdFZ4EgBVAvl1jt0LXwbN+Ryxvz3ScRvtjd8Y4upXf74/vB9kCBMXAYMwyFUamrgO1SO0BEGH8+hU77oH/GLSf8I5ieNZUsLSc8hWmz28KABz3ybvpUwDyBWHD+2f0WqUAvMoX33gawLwVA8gVtg0a0fPKqMB/5uRFsEngflYC+TYhmAB81YkEwNt5494pfwXg6aoEEHuWMRiylqW7aicSlCONfvPnWRcArMVUtn+ab3o4GCpGxHGS6r8A4KvQVkGh6dEpuuyN/XUApolZ6KGOk+aS364+AHCy48oBjJsEyub3FwF4Ebh0eyG//b6c/XneJf6zjx75HN6onaYr0u4j2iVhMl4CNe8TaJrneaKhixkhqgYo2z2xAWHraOONIAn/WQBzoYz6qjQZgcQ3+fVvQw5N3F8VgEPQlwCwvkzSpCmGJrjeiw9DB1SwAsi0dkxurCAdI5sMLHOcGB7vuxtgdghKRgjQ7K/kC+jQB3FS5LfCI1CW9ejJAyjYgMlEv4Pt50UQprb2FUDZBkyeD0DMgUYpgM6mYGuGIwDmihHG8dmREUiwEtYj/xRAgRGYMTaVnXEAwHQAQGX15TmV68Cs5uc5kUui/dlNWpLqYfjyJqyvzQDDXyPX+i0BTEH62SLmfBhK49I+gFX6/d8D0MbAsA/Ae4A5X8kaRVrb+XqoYe3/UKbaK/fregcqUUFqAy4O5gH0Jhd+GjlYTzTf+ia+60LbvGDbAA8C4CEAzFPWBLZxMJr8yBHp+CK+RFvrt1uAsHqItY9u6baGHfgOCBmUt44lFSlscwDMFzDHaEuEZK3fKYDc2pcUjgEQfHJ1EjlaEF5lEm37G5OUfgKA5JNbbwT8aEPpAAZoVCwA2JVAT6oakznvwaXBFUBkhMsAllJ6kYDQ88GBvEuKtUsCrB0SkfucYCypYPk7PMeIQEigWJZwWCoUJq+kff4riS6bVjAOQVKKJ7VYMRnsrgBgRZT7q6+exnB5+XxJAryeU6whfI7U9DEAr4Jj7IWefFX2er2m1z6Ad+p9oh5q/Ms1MvTLvneucR2c5/Vt7H5gJWzc/OvZExyqxbiZaDKqKAAgsSYp4Df3J3cW8tdItqme5vMApgSAShihcOSM+F+XBDR63pPAowJgpAEANBSjEP9ZXHKv85XYfBDAsyAB0MMNYMEIiCkACb/+HW6OHtp0VQD9IQBUzMXzNxSB5R/5vX/zc7w5Zp8jN/zlue2USdIBTEIez5IQTzEkzoZo2DMZsn4nPEeP7IlDdpk+LW8ZHwAwLQB6AmDkAKB2Sh6UD4MeBdAT7Y9SBThx6k+SOSyBdAOOK4DDrcjCxMQNTUzX+YMlnfkRGg4U+IVSsLfpxzBH+0PF/Rbj/2avSvuzjN1yfE6b2KQUAFhHsF8AuDc3lxIQ8Qbl+3Tb7IIInwAYUwB+DC7O/+aPKcsKhNtpu+0LXQEwEW+0AOga3PLDEBkLWP7b5Jo0ljl0VQJkqLnagBv/0lEo2GAiybljXYZMlaYdnQbQ6KJieVxkINnRuPXRlOftXXRwt94Gej+FDDfc1UsjU4wCMgMAUj8JajSqAMD7hc7tF00AuPNAy0hUZ7reSJujBccYp5dVAK1WdosSAP4EQgAA32Te9YXIRoYkKy5JwLl74yPCEEfhYFNx4JQ3hnxCUS+fAHCtAwvAucHAFdtUGme6cZXbOokyVAV+jDFQG3D0isIoF4BHw4SaJf0u9ndb3W1oIckzCeGyPVIAVKYElgoA2iaN93UAp8/mYwcAe4c6BaCsGdmnuhVV0GY6W4iHIsAB1DjmY0b4toujCgAkEX+VgH3mFc/IiPQ3H5kzbTKd5+1zlG77yg3Y4iMZ3axOcZEL1vFDpjOP1GVbJ1sA4EKdWt8Cbn+UH/jdlqcGS/TNxeklMpUB0FoGTUECYbH05KKszSAnZjRooCyBVsby8EACUCpRAYpdSmTbhXUA0oYlAJdJpDZQ7AeLa+XTkBqAJJ+VAFqbTzK5tBX/K4tGyvpNyKcbrUwff0guEulHZCg/MuMUaBQ7QZRs+0DribOi/03utvH6TJesDKBpVZPX/j6Ag62pGoBONXsSQBFAe7xPqYoSUDn7PSgB7K/fGsbNzC9LS3rtBvWB9dJuQ1pYoYmtOFpYkC+HgX9PrDClWZwkXbzSNhgtsSeMrtvKQQPiWpG24nNzAbEVkKjfl/ir9lVa5KGpfftNyAmySkqO8yFxf15qiwS8Y4X8Zpf4Pmop6KI0DUPaQqcS0AQAP/m6XiN7OHH9YAhc8uuboki1vtcdo2QSsLfXHDQ5gBZjCYvyAK/55CE9HovA126t//Xlp9zu/6/3n/f7j9n878HElkpGqqLaqDdE7q7DcWuj/Wc6zk1zwByL0U8e4CTmR6a2PPhdanidaFOt7o/Mzan2/zLlfEQBwEkJfPCF6aoEcEH+aE4BQ+X00MFV4jD/bGOCN9YbMT0+YNiyFXwo/Nmf/wEQ+v4+cw1l4wAAAABJRU5ErkJggg=="))]]></imageExpression>
+            </image>
+            <staticText>
+                <reportElement x="48" y="1" width="220" height="27" forecolor="#1B4D2E" uuid="7450c828-3e71-4bbd-9a16-c6549878fe84"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="16" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Ñanday SIAA]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="48" y="28" width="220" height="13" forecolor="#5F6B66" uuid="0774f676-5367-4099-a12e-a2842a2fbba3"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isItalic="true"/>
+                </textElement>
+                <text><![CDATA[Sistema Integrado de Administración de Almacenes]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="273" y="4" width="272" height="20" forecolor="#1F4E79" uuid="a3f2296d-06dc-4b4f-b5b0-a4c06eabf056"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{TITULO}]]></textFieldExpression>
+            </textField>
+            <textField isBlankWhenNull="true">
+                <reportElement x="273" y="24" width="272" height="16" forecolor="#1F4E79" uuid="4c764805-b09f-4236-abf1-655d71e1da1a"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA["N° " + $P{NUMERO}]]></textFieldExpression>
+            </textField>
+            <textField isBlankWhenNull="true">
+                <reportElement x="0" y="50" width="300" height="14" forecolor="#5F6B66" uuid="de5cc226-39f3-4573-8db0-dfbc6bc63c3d"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Impreso por: " + $P{USUARIO}]]></textFieldExpression>
+            </textField>
+            <textField isBlankWhenNull="true">
+                <reportElement x="300" y="50" width="255" height="14" forecolor="#5F6B66" uuid="57bd4253-51f4-44f0-8ee6-eb44d5feb383"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Fecha: " + new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format($P{FECHA})]]></textFieldExpression>
+            </textField>
+            <rectangle>
+                <reportElement x="0" y="40" width="555" height="3" mode="Opaque" forecolor="#1B4D2E" backcolor="#1B4D2E"/>
+                <graphicElement>
+                    <pen lineWidth="0.0"/>
+                </graphicElement>
+            </rectangle>
+            <rectangle>
+                <reportElement x="0" y="40" width="90" height="3" mode="Opaque" forecolor="#C2410C" backcolor="#C2410C"/>
+                <graphicElement>
+                    <pen lineWidth="0.0"/>
+                </graphicElement>
+            </rectangle>
+        </band>
+    </title>
+    <detail>
+        <band height="24" splitType="Stretch">
+            <printWhenExpression><![CDATA["SEC".equals($F{tipo})]]></printWhenExpression>
+            <rectangle>
+                <reportElement mode="Opaque" x="0" y="6" width="555" height="16" forecolor="#E3ECF6" backcolor="#E3ECF6" uuid="4a690732-a6b2-4be8-bce1-49da835b4cbb"/>
+                <graphicElement>
+                    <pen lineWidth="0.0"/>
+                </graphicElement>
+            </rectangle>
+            <textField isBlankWhenNull="true">
+                <reportElement x="4" y="6" width="547" height="16" forecolor="#1F4E79" uuid="dd04c8d0-affd-4c91-83dd-24dcafba8e5d"/>
+                <box leftPadding="3" rightPadding="3"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="9" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c1}]]></textFieldExpression>
+            </textField>
+        </band>
+        <band height="16" splitType="Stretch">
+            <printWhenExpression><![CDATA["CAMPO".equals($F{tipo})]]></printWhenExpression>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="170" height="16" forecolor="#263238" uuid="292ea3ea-9e6e-4c1c-a7ee-713c26fdf851"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c1}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToTallestObject" x="170" y="0" width="385" height="16" forecolor="#263238" uuid="14261067-7db6-49aa-ada7-f4bf79fefe7a"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c2}]]></textFieldExpression>
+            </textField>
+        </band>
+        <band height="16" splitType="Stretch">
+            <printWhenExpression><![CDATA["NOTA".equals($F{tipo})]]></printWhenExpression>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="555" height="16" forecolor="#263238" uuid="ba29f46f-31c2-48d6-97ee-453506d0ca4e"/>
+                <box leftPadding="3" rightPadding="3"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isItalic="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c1}]]></textFieldExpression>
+            </textField>
+        </band>
+        <band height="16" splitType="Stretch">
+            <printWhenExpression><![CDATA["ENC".equals($F{tipo}) && "2".equals($F{n})]]></printWhenExpression>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement mode="Opaque" backcolor="#D9E5F2" stretchType="RelativeToTallestObject" x="0" y="0" width="277" height="16" forecolor="#1F4E79" uuid="4669eb36-59f5-45b8-9359-959ef6bd4995"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c1}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement mode="Opaque" backcolor="#D9E5F2" stretchType="RelativeToTallestObject" x="277" y="0" width="278" height="16" forecolor="#1F4E79" uuid="6b8cb8a6-babb-4ea9-a86b-1f7baf316b8f"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c2}]]></textFieldExpression>
+            </textField>
+        </band>
+        <band height="14" splitType="Stretch">
+            <printWhenExpression><![CDATA["FILA".equals($F{tipo}) && "2".equals($F{n})]]></printWhenExpression>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="277" height="14" forecolor="#263238" uuid="8f76ebbf-0a49-4f95-8e40-bfab69b26634"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c1}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToTallestObject" x="277" y="0" width="278" height="14" forecolor="#263238" uuid="7d2e2bf8-65f1-4102-8011-f9feb87f0c78"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c2}]]></textFieldExpression>
+            </textField>
+        </band>
+        <band height="16" splitType="Stretch">
+            <printWhenExpression><![CDATA["ENC".equals($F{tipo}) && "3".equals($F{n})]]></printWhenExpression>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement mode="Opaque" backcolor="#D9E5F2" stretchType="RelativeToTallestObject" x="0" y="0" width="185" height="16" forecolor="#1F4E79" uuid="2f0d1089-7542-408b-babc-46df7c94da59"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c1}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement mode="Opaque" backcolor="#D9E5F2" stretchType="RelativeToTallestObject" x="185" y="0" width="185" height="16" forecolor="#1F4E79" uuid="99116484-2663-4fbb-a6c8-48c0f335980e"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c2}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement mode="Opaque" backcolor="#D9E5F2" stretchType="RelativeToTallestObject" x="370" y="0" width="185" height="16" forecolor="#1F4E79" uuid="b15bb694-6a08-4028-beb2-c35fdd23f1dc"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c3}]]></textFieldExpression>
+            </textField>
+        </band>
+        <band height="14" splitType="Stretch">
+            <printWhenExpression><![CDATA["FILA".equals($F{tipo}) && "3".equals($F{n})]]></printWhenExpression>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="185" height="14" forecolor="#263238" uuid="90deeab6-43a3-490d-b58c-c06ed880a440"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c1}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToTallestObject" x="185" y="0" width="185" height="14" forecolor="#263238" uuid="e307f157-a55c-48b2-9700-b2e02daa7e32"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c2}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToTallestObject" x="370" y="0" width="185" height="14" forecolor="#263238" uuid="7363f172-5d35-4271-a451-9aefe78f38c6"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c3}]]></textFieldExpression>
+            </textField>
+        </band>
+        <band height="16" splitType="Stretch">
+            <printWhenExpression><![CDATA["ENC".equals($F{tipo}) && "4".equals($F{n})]]></printWhenExpression>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement mode="Opaque" backcolor="#D9E5F2" stretchType="RelativeToTallestObject" x="0" y="0" width="138" height="16" forecolor="#1F4E79" uuid="a28064a3-29de-403c-a8e4-e30011647ac0"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c1}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement mode="Opaque" backcolor="#D9E5F2" stretchType="RelativeToTallestObject" x="138" y="0" width="138" height="16" forecolor="#1F4E79" uuid="e35a7d81-019f-492a-9937-4ff9880bd3f5"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c2}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement mode="Opaque" backcolor="#D9E5F2" stretchType="RelativeToTallestObject" x="276" y="0" width="138" height="16" forecolor="#1F4E79" uuid="115d95ba-06ff-4cbb-9ef5-006aabe3befc"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c3}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement mode="Opaque" backcolor="#D9E5F2" stretchType="RelativeToTallestObject" x="414" y="0" width="141" height="16" forecolor="#1F4E79" uuid="46619d20-1d54-48f9-bd28-b84650b58c5e"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c4}]]></textFieldExpression>
+            </textField>
+        </band>
+        <band height="14" splitType="Stretch">
+            <printWhenExpression><![CDATA["FILA".equals($F{tipo}) && "4".equals($F{n})]]></printWhenExpression>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="138" height="14" forecolor="#263238" uuid="d2bd859c-8351-4751-bd7f-4343d6d859b6"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c1}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToTallestObject" x="138" y="0" width="138" height="14" forecolor="#263238" uuid="a7835583-8818-43f1-82fa-ae0226cd74ea"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c2}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToTallestObject" x="276" y="0" width="138" height="14" forecolor="#263238" uuid="77484ebc-8bb5-481b-9e7b-284b814c8801"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c3}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToTallestObject" x="414" y="0" width="141" height="14" forecolor="#263238" uuid="9a6b7687-d529-4a6e-af18-1cc03ccf0f12"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c4}]]></textFieldExpression>
+            </textField>
+        </band>
+        <band height="16" splitType="Stretch">
+            <printWhenExpression><![CDATA["ENC".equals($F{tipo}) && "5".equals($F{n})]]></printWhenExpression>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement mode="Opaque" backcolor="#D9E5F2" stretchType="RelativeToTallestObject" x="0" y="0" width="111" height="16" forecolor="#1F4E79" uuid="1ca682a8-6736-4a00-b3a5-153e5039c6df"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c1}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement mode="Opaque" backcolor="#D9E5F2" stretchType="RelativeToTallestObject" x="111" y="0" width="111" height="16" forecolor="#1F4E79" uuid="9b1a2693-811d-461b-a9ba-3184d36a3c0f"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c2}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement mode="Opaque" backcolor="#D9E5F2" stretchType="RelativeToTallestObject" x="222" y="0" width="111" height="16" forecolor="#1F4E79" uuid="b7a46d7b-df3c-479a-b385-0533b192bdae"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c3}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement mode="Opaque" backcolor="#D9E5F2" stretchType="RelativeToTallestObject" x="333" y="0" width="111" height="16" forecolor="#1F4E79" uuid="6645a110-8db3-4117-98ea-151607183840"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c4}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement mode="Opaque" backcolor="#D9E5F2" stretchType="RelativeToTallestObject" x="444" y="0" width="111" height="16" forecolor="#1F4E79" uuid="ea84762c-e7b9-4725-a565-add872d250d2"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c5}]]></textFieldExpression>
+            </textField>
+        </band>
+        <band height="14" splitType="Stretch">
+            <printWhenExpression><![CDATA["FILA".equals($F{tipo}) && "5".equals($F{n})]]></printWhenExpression>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="111" height="14" forecolor="#263238" uuid="d09caa23-3e0d-4eda-9b3b-378589ba5acb"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c1}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToTallestObject" x="111" y="0" width="111" height="14" forecolor="#263238" uuid="a319e77d-3c49-4eba-b201-6740ee3158ab"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c2}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToTallestObject" x="222" y="0" width="111" height="14" forecolor="#263238" uuid="f3e4d0eb-ea89-45b1-92d1-c7fa6c9fd657"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c3}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToTallestObject" x="333" y="0" width="111" height="14" forecolor="#263238" uuid="6365d5e6-ada8-4590-a97b-240c497591cf"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c4}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToTallestObject" x="444" y="0" width="111" height="14" forecolor="#263238" uuid="72fcb914-4884-45ec-8c34-6c4d08473206"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c5}]]></textFieldExpression>
+            </textField>
+        </band>
+        <band height="16" splitType="Stretch">
+            <printWhenExpression><![CDATA["ENC".equals($F{tipo}) && "6".equals($F{n})]]></printWhenExpression>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement mode="Opaque" backcolor="#D9E5F2" stretchType="RelativeToTallestObject" x="0" y="0" width="92" height="16" forecolor="#1F4E79" uuid="fdae4e46-eb02-4c2d-a859-b5836b27d890"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c1}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement mode="Opaque" backcolor="#D9E5F2" stretchType="RelativeToTallestObject" x="92" y="0" width="92" height="16" forecolor="#1F4E79" uuid="12c65a97-583d-4ac2-8dbd-a0b88cc15cc4"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c2}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement mode="Opaque" backcolor="#D9E5F2" stretchType="RelativeToTallestObject" x="184" y="0" width="92" height="16" forecolor="#1F4E79" uuid="04defa90-0ebf-4873-a002-3b0de00b9bf9"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c3}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement mode="Opaque" backcolor="#D9E5F2" stretchType="RelativeToTallestObject" x="276" y="0" width="92" height="16" forecolor="#1F4E79" uuid="d483e682-877a-4c4e-9a03-97748b5440a3"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c4}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement mode="Opaque" backcolor="#D9E5F2" stretchType="RelativeToTallestObject" x="368" y="0" width="92" height="16" forecolor="#1F4E79" uuid="82364064-6e31-4271-b077-b0c72c7af844"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c5}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement mode="Opaque" backcolor="#D9E5F2" stretchType="RelativeToTallestObject" x="460" y="0" width="95" height="16" forecolor="#1F4E79" uuid="f270c953-ebf8-4e00-976a-698372885e13"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c6}]]></textFieldExpression>
+            </textField>
+        </band>
+        <band height="14" splitType="Stretch">
+            <printWhenExpression><![CDATA["FILA".equals($F{tipo}) && "6".equals($F{n})]]></printWhenExpression>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="92" height="14" forecolor="#263238" uuid="21610331-3f0a-4ccb-9988-fc33947bc727"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c1}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToTallestObject" x="92" y="0" width="92" height="14" forecolor="#263238" uuid="24de7715-1b5a-4536-938a-28dc08ff8f99"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c2}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToTallestObject" x="184" y="0" width="92" height="14" forecolor="#263238" uuid="4c77e755-8595-42b4-8bbd-6d3f2dce95df"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c3}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToTallestObject" x="276" y="0" width="92" height="14" forecolor="#263238" uuid="afa8846c-0467-49cc-b81b-0cb6308bf6b2"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c4}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToTallestObject" x="368" y="0" width="92" height="14" forecolor="#263238" uuid="71897c31-5993-4ca0-b4ea-89a299d0928d"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c5}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToTallestObject" x="460" y="0" width="95" height="14" forecolor="#263238" uuid="d3e7026f-743a-447e-901d-77a47e660586"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c6}]]></textFieldExpression>
+            </textField>
+        </band>
+        <band height="16" splitType="Stretch">
+            <printWhenExpression><![CDATA["ENC".equals($F{tipo}) && "7".equals($F{n})]]></printWhenExpression>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement mode="Opaque" backcolor="#D9E5F2" stretchType="RelativeToTallestObject" x="0" y="0" width="79" height="16" forecolor="#1F4E79" uuid="1ea6537d-2523-4ea4-b25b-7720ffb4a958"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c1}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement mode="Opaque" backcolor="#D9E5F2" stretchType="RelativeToTallestObject" x="79" y="0" width="79" height="16" forecolor="#1F4E79" uuid="bef578c6-3f26-4488-ac3e-0e3b5f12fff9"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c2}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement mode="Opaque" backcolor="#D9E5F2" stretchType="RelativeToTallestObject" x="158" y="0" width="79" height="16" forecolor="#1F4E79" uuid="97c502ef-440d-44a2-9f36-43c2cf88a4c3"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c3}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement mode="Opaque" backcolor="#D9E5F2" stretchType="RelativeToTallestObject" x="237" y="0" width="79" height="16" forecolor="#1F4E79" uuid="e1101534-e579-42ef-aace-0f80cdbf56a3"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c4}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement mode="Opaque" backcolor="#D9E5F2" stretchType="RelativeToTallestObject" x="316" y="0" width="79" height="16" forecolor="#1F4E79" uuid="fd7ae438-fad2-4d35-89c3-a713a4435a46"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c5}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement mode="Opaque" backcolor="#D9E5F2" stretchType="RelativeToTallestObject" x="395" y="0" width="79" height="16" forecolor="#1F4E79" uuid="a2654f6b-490b-4fb8-8980-347954b2255c"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c6}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement mode="Opaque" backcolor="#D9E5F2" stretchType="RelativeToTallestObject" x="474" y="0" width="81" height="16" forecolor="#1F4E79" uuid="af55c719-7f6f-40e2-aaca-a1db3c44106e"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c7}]]></textFieldExpression>
+            </textField>
+        </band>
+        <band height="14" splitType="Stretch">
+            <printWhenExpression><![CDATA["FILA".equals($F{tipo}) && "7".equals($F{n})]]></printWhenExpression>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="79" height="14" forecolor="#263238" uuid="c0b2afc6-dce1-457e-8aa2-669e59b7a743"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c1}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToTallestObject" x="79" y="0" width="79" height="14" forecolor="#263238" uuid="f7ebcee2-65de-48d6-a9a3-b41dc2322bb4"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c2}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToTallestObject" x="158" y="0" width="79" height="14" forecolor="#263238" uuid="e7d856b1-356a-45dc-94e6-d91ed1aeb98a"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c3}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToTallestObject" x="237" y="0" width="79" height="14" forecolor="#263238" uuid="5400610f-8059-4b11-bb5f-d5b997d21bfe"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c4}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToTallestObject" x="316" y="0" width="79" height="14" forecolor="#263238" uuid="e2e1e7f5-2e40-4640-919d-71c28b23a1dc"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c5}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToTallestObject" x="395" y="0" width="79" height="14" forecolor="#263238" uuid="4638cd5a-2422-4cb8-a969-4a03b4553a64"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c6}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToTallestObject" x="474" y="0" width="81" height="14" forecolor="#263238" uuid="39e950f4-ad49-4d06-83df-65a4444decec"/>
+                <box leftPadding="3" rightPadding="3">
+                    <bottomPen lineWidth="0.5" lineColor="#C9D3CC"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{c7}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+    <pageFooter>
+        <band height="20" splitType="Stretch">
+            <line>
+                <reportElement x="0" y="0" width="555" height="1" forecolor="#C9D3CC" uuid="2aaa1fd6-11a6-49d1-af3b-fce218220c11"/>
+            </line>
+            <textField>
+                <reportElement x="0" y="4" width="425" height="14" forecolor="#7A8680"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{TITULO} + " N° " + $P{NUMERO}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="425" y="4" width="100" height="14" forecolor="#7A8680"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER} + " de"]]></textFieldExpression>
+            </textField>
+            <textField evaluationTime="Report">
+                <reportElement x="525" y="4" width="30" height="14" forecolor="#7A8680"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+</jasperReport>

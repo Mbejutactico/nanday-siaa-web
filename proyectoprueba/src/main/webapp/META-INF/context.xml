@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/nanday_siaa">
+
+    <!--
+        CONEXION A LA BASE DE DATOS (requiere Tomcat 8.5 o 9)
+        Usuario con permisos limitados (lo crea sql/01_migracion_seguridad.sql).
+        La CONTRASEÑA no se guarda aqui. Formas de pasarla al arrancar Tomcat:
+          * Recomendada (sirve para el pool y para la conexion directa):
+                CATALINA_OPTS="-Dnanday.db.password=..."   (en bin/setenv.bat o bin/setenv.sh)
+          * Solo para la conexion directa (sin pool):
+                variable de entorno NANDAY_DB_PASSWORD=...
+            Tomcat NO reemplaza ${nanday.db.password} del pool con variables de entorno;
+            si falta la propiedad, el pool falla y Conexion.java usa la conexion directa.
+        db.password queda vacio y solo sirve para desarrollo local.
+    -->
+    <Parameter name="db.url"      value="jdbc:postgresql://localhost:5432/proyecto_final" override="false"/>
+    <Parameter name="db.user"     value="nanday_app" override="false"/>
+    <Parameter name="db.password" value="Nanday.App-2026" override="false"/>
+
+    <!--
+        secureCookies=true marca la cookie de sesión como Secure (solo viaja por HTTPS).
+        Lo aplica seguridad/InicioAplicacion.java al arrancar la aplicación.
+        Activar UNA VEZ que el sitio se sirva por HTTPS; con el sitio en HTTP puro
+        habria que dejarlo en false para que nadie pierda la sesion.
+    -->
+    <Parameter name="secureCookies" value="false" override="false"/>
+
+    <!--
+        Carpeta donde se guardan las fotos de perfil (fuera del proyecto, no se
+        pierden al redesplegar). Si se deja vacio usa CARPETA_DEL_USUARIO/nanday_uploads
+    -->
+    <Parameter name="uploads.dir" value="" override="false"/>
+
+    <!--
+        POOL DE CONEXIONES: 20 conexiones reutilizables en vez de abrir una
+        nueva por cada peticion. Requisito: postgresql-42.7.10.jar en lib/ de Tomcat.
+        Sin pool, ~100 peticiones simultaneas agotan PostgreSQL (max_connections).
+    -->
+    <Resource name="jdbc/nanday" auth="Container" type="javax.sql.DataSource"
+              driverClassName="org.postgresql.Driver"
+              url="jdbc:postgresql://localhost:5432/proyecto_final"
+              username="nanday_app" password="${nanday.db.password}"
+              maxTotal="20" maxIdle="5" minIdle="1" maxWaitMillis="10000"
+              validationQuery="SELECT 1" testOnBorrow="true"
+              removeAbandonedOnBorrow="true" removeAbandonedTimeout="60"/>
+
+    <!-- La cookie de sesión no viaja en peticiones de otros sitios (freno CSRF). -->
+    <CookieProcessor sameSiteCookies="lax"/>
+</Context>

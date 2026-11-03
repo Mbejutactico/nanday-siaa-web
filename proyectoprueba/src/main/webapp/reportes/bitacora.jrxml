@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports      http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="bitacora" pageWidth="842" pageHeight="595" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" orientation="Landscape" whenNoDataType="NoDataSection">
+    <parameter name="TITULO" class="java.lang.String"/>
+    <parameter name="FECHA" class="java.util.Date"/>
+    <parameter name="USUARIO" class="java.lang.String"/>
+    <!-- Filtros de la pantalla (vacío o 0 = sin filtro) -->
+    <parameter name="DESDE" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+    <parameter name="HASTA" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+    <parameter name="ID_USUARIO" class="java.lang.Integer"><defaultValueExpression><![CDATA[0]]></defaultValueExpression></parameter>
+    <parameter name="MODULO" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+    <parameter name="ACCION" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+    <parameter name="TEXTO" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+    <parameter name="TABLA" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+    <parameter name="ID_REGISTRO" class="java.lang.Integer"><defaultValueExpression><![CDATA[0]]></defaultValueExpression></parameter>
+    <parameter name="FILTROS" class="java.lang.String"><defaultValueExpression><![CDATA["Sin filtros"]]></defaultValueExpression></parameter>
+    <queryString>
+        <![CDATA[
+            SELECT b.fecha, COALESCE(NULLIF(TRIM(COALESCE(u.nombre, '') || ' ' || COALESCE(u.apellido, '')), ''), b.usuario_email, '') AS usuario,
+                   COALESCE(b.ip, '') AS ip, b.modulo, b.accion, COALESCE(b.descripcion, '') AS descripcion,
+                   COALESCE((SELECT string_agg(d.campo || ': ' || COALESCE(d.valor_anterior, '') || ' -> ' || COALESCE(d.valor_nuevo, ''), chr(10) ORDER BY d.id_detalle)
+                               FROM bitacora_detalle d WHERE d.id_bitacora = b.id_bitacora), '') AS cambios
+            FROM bitacora b LEFT JOIN usuarios u ON u.id_usuario = b.id_usuario
+            WHERE b.fecha >= COALESCE(CAST(NULLIF($P{DESDE}, '') AS date), DATE '1900-01-01')
+              AND b.fecha < COALESCE(CAST(NULLIF($P{HASTA}, '') AS date) + 1, DATE '2999-12-31')
+              AND ($P{ID_USUARIO} = 0 OR b.id_usuario = $P{ID_USUARIO})
+              AND ($P{MODULO} = '' OR b.modulo = $P{MODULO})
+              AND ($P{ACCION} = '' OR b.accion = $P{ACCION})
+              AND ($P{TEXTO} = '' OR b.descripcion ILIKE '%' || $P{TEXTO} || '%' OR b.usuario_email ILIKE '%' || $P{TEXTO} || '%')
+              AND ($P{TABLA} = '' OR $P{ID_REGISTRO} = 0 OR (b.tabla = $P{TABLA} AND b.id_registro = $P{ID_REGISTRO}))
+            ORDER BY b.fecha DESC, b.id_bitacora DESC
+            LIMIT 2000
+        ]]>
+    </queryString>
+    <field name="fecha" class="java.sql.Timestamp"/>
+    <field name="usuario" class="java.lang.String"/>
+    <field name="ip" class="java.lang.String"/>
+    <field name="modulo" class="java.lang.String"/>
+    <field name="accion" class="java.lang.String"/>
+    <field name="descripcion" class="java.lang.String"/>
+    <field name="cambios" class="java.lang.String"/>
+    <title>
+        <band height="118">
+            <image scaleImage="RetainShape" onErrorType="Blank">
+                <reportElement x="0" y="0" width="42" height="42"/>
+                <imageExpression><![CDATA[new java.io.ByteArrayInputStream(java.util.Base64.getDecoder().decode("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"))]]></imageExpression>
+            </image>
+            <!-- Banner del sistema -->
+            <staticText>
+                <reportElement x="52" y="1" width="220" height="27" forecolor="#1B4D2E"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="16" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Ñanday SIAA]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="52" y="28" width="220" height="13" forecolor="#5F6B66"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isItalic="true"/>
+                </textElement>
+                <text><![CDATA[Sistema Integrado de Administración de Almacenes]]></text>
+            </staticText>
+            <!-- Título del reporte -->
+            <staticText>
+                <reportElement x="0" y="54" width="802" height="22" forecolor="#1F4E79"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="14" isBold="true"/>
+                </textElement>
+                <text><![CDATA[BITÁCORA DEL SISTEMA]]></text>
+            </staticText>
+            <line>
+                <reportElement x="0" y="79" width="802" height="1" forecolor="#1B4D2E"/>
+            </line>
+            <textField>
+                <reportElement x="0" y="84" width="400" height="14" forecolor="#5F6B66"/>
+                <textElement textAlignment="Left">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Generado por: " + $P{USUARIO}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="402" y="84" width="400" height="14" forecolor="#5F6B66"/>
+                <textElement textAlignment="Right">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Fecha: " + new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format($P{FECHA})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="0" y="100" width="802" height="14" forecolor="#5F6B66"/>
+                <textElement textAlignment="Left">
+                    <font size="8" isItalic="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Filtros: " + $P{FILTROS}]]></textFieldExpression>
+            </textField>
+            <rectangle>
+                <reportElement x="0" y="44" width="802" height="3" mode="Opaque" forecolor="#1B4D2E" backcolor="#1B4D2E"/>
+                <graphicElement>
+                    <pen lineWidth="0.0"/>
+                </graphicElement>
+            </rectangle>
+            <rectangle>
+                <reportElement x="0" y="44" width="90" height="3" mode="Opaque" forecolor="#C2410C" backcolor="#C2410C"/>
+                <graphicElement>
+                    <pen lineWidth="0.0"/>
+                </graphicElement>
+            </rectangle>
+        </band>
+    </title>
+        <columnHeader>
+        <band height="28">
+            <rectangle>
+                <reportElement x="0" y="0" width="802" height="28" mode="Opaque" backcolor="#1F4E79" forecolor="#1F4E79"/>
+                <graphicElement>
+                    <pen lineWidth="0.0"/>
+                </graphicElement>
+            </rectangle>
+            <staticText>
+                <reportElement x="0" y="4" width="95" height="20" forecolor="#FFFFFF"/>
+                <box leftPadding="3" rightPadding="3"/>
+                <textElement verticalAlignment="Middle">
+                    <font size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Fecha]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="95" y="4" width="120" height="20" forecolor="#FFFFFF"/>
+                <box leftPadding="3" rightPadding="3"/>
+                <textElement verticalAlignment="Middle">
+                    <font size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Usuario]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="215" y="4" width="75" height="20" forecolor="#FFFFFF"/>
+                <box leftPadding="3" rightPadding="3"/>
+                <textElement verticalAlignment="Middle">
+                    <font size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[IP]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="290" y="4" width="80" height="20" forecolor="#FFFFFF"/>
+                <box leftPadding="3" rightPadding="3"/>
+                <textElement verticalAlignment="Middle">
+                    <font size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Módulo]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="370" y="4" width="80" height="20" forecolor="#FFFFFF"/>
+                <box leftPadding="3" rightPadding="3"/>
+                <textElement verticalAlignment="Middle">
+                    <font size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Acción]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="450" y="4" width="187" height="20" forecolor="#FFFFFF"/>
+                <box leftPadding="3" rightPadding="3"/>
+                <textElement verticalAlignment="Middle">
+                    <font size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Descripción]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="637" y="4" width="165" height="20" forecolor="#FFFFFF"/>
+                <box leftPadding="3" rightPadding="3"/>
+                <textElement verticalAlignment="Middle">
+                    <font size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Cambios]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+    <detail>
+        <band height="20" splitType="Prevent">
+            <line>
+                <reportElement positionType="Float" x="0" y="19" width="802" height="1" forecolor="#D5DED7"/>
+            </line>
+            <textField textAdjust="StretchHeight" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToTallestObject" x="0" y="2" width="95" height="16" forecolor="#263238"/>
+                <box leftPadding="3" rightPadding="3"/>
+                <textElement verticalAlignment="Top">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format($F{fecha})]]></textFieldExpression>
+            </textField>
+            <textField textAdjust="StretchHeight" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToTallestObject" x="95" y="2" width="120" height="16" forecolor="#263238"/>
+                <box leftPadding="3" rightPadding="3"/>
+                <textElement verticalAlignment="Top">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{usuario}]]></textFieldExpression>
+            </textField>
+            <textField textAdjust="StretchHeight" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToTallestObject" x="215" y="2" width="75" height="16" forecolor="#263238"/>
+                <box leftPadding="3" rightPadding="3"/>
+                <textElement verticalAlignment="Top">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{ip}]]></textFieldExpression>
+            </textField>
+            <textField textAdjust="StretchHeight" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToTallestObject" x="290" y="2" width="80" height="16" forecolor="#263238"/>
+                <box leftPadding="3" rightPadding="3"/>
+                <textElement verticalAlignment="Top">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{modulo}]]></textFieldExpression>
+            </textField>
+            <textField textAdjust="StretchHeight" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToTallestObject" x="370" y="2" width="80" height="16" forecolor="#263238"/>
+                <box leftPadding="3" rightPadding="3"/>
+                <textElement verticalAlignment="Top">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{accion}]]></textFieldExpression>
+            </textField>
+            <textField textAdjust="StretchHeight" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToTallestObject" x="450" y="2" width="187" height="16" forecolor="#263238"/>
+                <box leftPadding="3" rightPadding="3"/>
+                <textElement verticalAlignment="Top">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
+            </textField>
+            <textField textAdjust="StretchHeight" isBlankWhenNull="true">
+                <reportElement stretchType="RelativeToTallestObject" x="637" y="2" width="165" height="16" forecolor="#263238"/>
+                <box leftPadding="3" rightPadding="3"/>
+                <textElement verticalAlignment="Top">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{cambios}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+    <pageFooter>
+        <band height="25">
+            <line>
+                <reportElement x="0" y="0" width="802" height="1" forecolor="#C9D3CC"/>
+            </line>
+            <textField>
+                <reportElement x="0" y="5" width="672" height="14" forecolor="#7A8680"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Ñanday SIAA  •  Sistema Integrado de Administración de Almacenes"]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="672" y="5" width="100" height="14" forecolor="#7A8680"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER} + " de"]]></textFieldExpression>
+            </textField>
+            <textField evaluationTime="Report">
+                <reportElement x="772" y="5" width="30" height="14" forecolor="#7A8680"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+        <summary>
+        <band height="36">
+            <rectangle radius="4">
+                <reportElement x="0" y="4" width="802" height="26" mode="Opaque" backcolor="#E8F2EA" forecolor="#B9D7BF"/>
+                <graphicElement>
+                    <pen lineWidth="0.75" lineColor="#B9D7BF"/>
+                </graphicElement>
+            </rectangle>
+            <textField>
+                <reportElement x="0" y="4" width="802" height="26" forecolor="#1B4D2E"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Registros: " + $V{REPORT_COUNT}]]></textFieldExpression>
+            </textField>
+        </band>
+    </summary>
+    <noData>
+        <band height="40">
+            <staticText>
+                <reportElement x="0" y="10" width="802" height="20" forecolor="#1B4D2E"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="11" isBold="true"/>
+                </textElement>
+                <text><![CDATA[No hay registros en la bitácora con esos filtros.]]></text>
+            </staticText>
+        </band>
+    </noData>
+</jasperReport>

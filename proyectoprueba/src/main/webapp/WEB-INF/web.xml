@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0">
+
+    <!-- Configuración al iniciar la aplicación (cookie de sesión) -->
+    <listener>
+        <listener-class>com.mycompany.proyectoprueba.seguridad.InicioAplicacion</listener-class>
+    </listener>
+
+    <!-- Seguridad: sesión obligatoria, permisos, CSRF y cierre de conexiones -->
+    <filter>
+        <filter-name>FiltroSeguridad</filter-name>
+        <filter-class>com.mycompany.proyectoprueba.seguridad.FiltroSeguridad</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>FiltroSeguridad</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!-- Perfil: subida de la foto (multipart, máximo 2 MB) -->
+    <servlet>
+        <servlet-name>PerfilServlet</servlet-name>
+        <servlet-class>com.mycompany.proyectoprueba.controlador.PerfilServlet</servlet-class>
+        <multipart-config>
+            <max-file-size>2097152</max-file-size>
+            <max-request-size>3145728</max-request-size>
+            <file-size-threshold>0</file-size-threshold>
+        </multipart-config>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PerfilServlet</servlet-name>
+        <url-pattern>/PerfilServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- Controladores MVC (Servlet -> Servicio -> DAO), llamados por AJAX desde las pantallas -->
+    <servlet>
+        <servlet-name>UnidadMedidaServlet</servlet-name>
+        <servlet-class>com.mycompany.proyectoprueba.controlador.UnidadMedidaServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UnidadMedidaServlet</servlet-name>
+        <url-pattern>/UnidadMedidaServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CentroServlet</servlet-name>
+        <servlet-class>com.mycompany.proyectoprueba.controlador.CentroServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CentroServlet</servlet-name>
+        <url-pattern>/CentroServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CentroCostoServlet</servlet-name>
+        <servlet-class>com.mycompany.proyectoprueba.controlador.CentroCostoServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CentroCostoServlet</servlet-name>
+        <url-pattern>/CentroCostoServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AlmacenServlet</servlet-name>
+        <servlet-class>com.mycompany.proyectoprueba.controlador.AlmacenServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AlmacenServlet</servlet-name>
+        <url-pattern>/AlmacenServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ProveedorServlet</servlet-name>
+        <servlet-class>com.mycompany.proyectoprueba.controlador.ProveedorServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ProveedorServlet</servlet-name>
+        <url-pattern>/ProveedorServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>RolServlet</servlet-name>
+        <servlet-class>com.mycompany.proyectoprueba.controlador.RolServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RolServlet</servlet-name>
+        <url-pattern>/RolServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>UsuarioServlet</servlet-name>
+        <servlet-class>com.mycompany.proyectoprueba.controlador.UsuarioServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UsuarioServlet</servlet-name>
+        <url-pattern>/UsuarioServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>InsumoServlet</servlet-name>
+        <servlet-class>com.mycompany.proyectoprueba.controlador.InsumoServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>InsumoServlet</servlet-name>
+        <url-pattern>/InsumoServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>StockServlet</servlet-name>
+        <servlet-class>com.mycompany.proyectoprueba.controlador.StockServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>StockServlet</servlet-name>
+        <url-pattern>/StockServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>BitacoraServlet</servlet-name>
+        <servlet-class>com.mycompany.proyectoprueba.controlador.BitacoraServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>BitacoraServlet</servlet-name>
+        <url-pattern>/BitacoraServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>NotificacionServlet</servlet-name>
+        <servlet-class>com.mycompany.proyectoprueba.controlador.NotificacionServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>NotificacionServlet</servlet-name>
+        <url-pattern>/NotificacionServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>DashboardServlet</servlet-name>
+        <servlet-class>com.mycompany.proyectoprueba.controlador.DashboardServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DashboardServlet</servlet-name>
+        <url-pattern>/DashboardServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>LoginServlet</servlet-name>
+        <servlet-class>com.mycompany.proyectoprueba.controlador.LoginServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LoginServlet</servlet-name>
+        <url-pattern>/LoginServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>SolicitudCompraServlet</servlet-name>
+        <servlet-class>com.mycompany.proyectoprueba.controlador.SolicitudCompraServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SolicitudCompraServlet</servlet-name>
+        <url-pattern>/SolicitudCompraServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>OrdenCompraServlet</servlet-name>
+        <servlet-class>com.mycompany.proyectoprueba.controlador.OrdenCompraServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>OrdenCompraServlet</servlet-name>
+        <url-pattern>/OrdenCompraServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>OrdenTrabajoServlet</servlet-name>
+        <servlet-class>com.mycompany.proyectoprueba.controlador.OrdenTrabajoServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>OrdenTrabajoServlet</servlet-name>
+        <url-pattern>/OrdenTrabajoServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>InventarioServlet</servlet-name>
+        <servlet-class>com.mycompany.proyectoprueba.controlador.InventarioServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>InventarioServlet</servlet-name>
+        <url-pattern>/InventarioServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ActivoServlet</servlet-name>
+        <servlet-class>com.mycompany.proyectoprueba.controlador.ActivoServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ActivoServlet</servlet-name>
+        <url-pattern>/ActivoServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>SolicitudActivoServlet</servlet-name>
+        <servlet-class>com.mycompany.proyectoprueba.controlador.SolicitudActivoServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SolicitudActivoServlet</servlet-name>
+        <url-pattern>/SolicitudActivoServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>InformeServlet</servlet-name>
+        <servlet-class>com.mycompany.proyectoprueba.controlador.InformeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>InformeServlet</servlet-name>
+        <url-pattern>/InformeServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ReporteIndividualServlet</servlet-name>
+        <servlet-class>com.mycompany.proyectoprueba.controlador.ReporteIndividualServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ReporteIndividualServlet</servlet-name>
+        <url-pattern>/ReporteIndividualServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- Fotos de perfil guardadas fuera del proyecto desplegado -->
+    <servlet>
+        <servlet-name>FotoPerfilServlet</servlet-name>
+        <servlet-class>com.mycompany.proyectoprueba.controlador.FotoPerfilServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FotoPerfilServlet</servlet-name>
+        <url-pattern>/uploads/perfiles/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- Codificación UTF-8 para todas las páginas -->
+    <jsp-config>
+        <jsp-property-group>
+            <url-pattern>*.jsp</url-pattern>
+            <url-pattern>*.jspf</url-pattern>
+            <page-encoding>UTF-8</page-encoding>
+        </jsp-property-group>
+    </jsp-config>
+
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+        <cookie-config>
+            <http-only>true</http-only>
+        </cookie-config>
+        <tracking-mode>COOKIE</tracking-mode>
+    </session-config>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/error.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>405</error-code>
+        <location>/error.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/error.jsp</location>
+    </error-page>
+    <error-page>
+        <exception-type>java.lang.Throwable</exception-type>
+        <location>/error.jsp</location>
+    </error-page>
+</web-app>

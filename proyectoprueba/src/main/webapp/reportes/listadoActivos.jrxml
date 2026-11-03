@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="listadoActivos" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9eacec6e-c51c-41f2-b3af-8a3f91183bf0">
+    <property name="ireport.zoom" value="1.0"/>
+    <property name="ireport.x" value="0"/>
+    <property name="ireport.y" value="0"/>
+    <parameter name="TITULO" class="java.lang.String">
+        <defaultValueExpression><![CDATA["Listado de Activos Fijos"]]></defaultValueExpression>
+    </parameter>
+    <parameter name="FECHA" class="java.util.Date">
+        <defaultValueExpression><![CDATA[new java.util.Date()]]></defaultValueExpression>
+    </parameter>
+    <parameter name="USUARIO" class="java.lang.String">
+        <defaultValueExpression><![CDATA["Sistema"]]></defaultValueExpression>
+    </parameter>
+    <parameter name="ID_CENTRO" class="java.lang.Integer">
+        <defaultValueExpression><![CDATA[Integer.valueOf(0)]]></defaultValueExpression>
+    </parameter>
+    <parameter name="ID_CENTRO_COSTO" class="java.lang.Integer">
+        <defaultValueExpression><![CDATA[Integer.valueOf(0)]]></defaultValueExpression>
+    </parameter>
+    <parameter name="ESTADO" class="java.lang.String">
+        <defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+    </parameter>
+    <parameter name="PENDIENTES" class="java.lang.Boolean">
+        <defaultValueExpression><![CDATA[Boolean.FALSE]]></defaultValueExpression>
+    </parameter>
+    <parameter name="CENTROS" class="java.lang.String">
+        <defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+    </parameter>
+    <queryString>
+		<![CDATA[SELECT
+    e.serial_activo                              AS numero_activo,
+    i.codigo,
+    i.descripcion,
+    COALESCE(e.numero_serie, '-')                AS numero_serie,
+    ce.nombre                                    AS centro,
+    CASE WHEN cc.codigo IS NULL THEN 'Sin asignar'
+         WHEN COALESCE(TRIM(cc.descripcion), '') = '' THEN cc.codigo
+         ELSE cc.codigo || ' - ' || cc.descripcion END AS centro_costo,
+    CASE e.estado
+        WHEN 'DISPONIBLE' THEN 'Disponible'
+        WHEN 'ASIGNADO' THEN 'Asignado'
+        WHEN 'EN_TRANSITO' THEN 'En tránsito'
+        WHEN 'EN_REPARACION' THEN 'En reparación'
+        WHEN 'BAJA' THEN 'De baja'
+        WHEN 'SOLICITADO' THEN 'Pedido'
+        WHEN 'ANULADO' THEN 'Anulado'
+        ELSE e.estado END                        AS estado,
+    CASE WHEN e.estado = 'ASIGNADO' THEN
+        (SELECT COALESCE(ur.nombre || ' ' || ur.apellido,
+                         NULLIF(TRIM(COALESCE(ma.datos_receptor_nombre, '') || ' ' || COALESCE(ma.datos_receptor_apellido, '')), ''))
+           FROM movimientos_activos ma
+           LEFT JOIN usuarios ur ON ur.id_usuario = ma.id_usuario_receptor
+          WHERE ma.id_equipo = e.id_equipo AND ma.tipo_movimiento = 'ASIGNACION'
+          ORDER BY ma.fecha_movimiento DESC, ma.id_movimiento DESC
+          LIMIT 1)
+    END                                          AS responsable
+FROM equipos e
+LEFT JOIN insumos i        ON i.id_insumo = e.id_insumo_base
+LEFT JOIN centros ce       ON ce.id_centro = e.id_centro_actual
+LEFT JOIN centros_costo cc ON cc.id_centro_costo = e.id_centro_costo_actual
+WHERE ($P{ESTADO} = '' OR e.estado = $P{ESTADO})
+  AND ($P{ID_CENTRO} = 0 OR e.id_centro_actual = $P{ID_CENTRO})
+  AND ($P{CENTROS} = '' OR e.id_centro_actual = ANY (string_to_array($P{CENTROS}, ',')::integer[]))
+  AND ($P{ID_CENTRO_COSTO} = 0 OR e.id_centro_costo_actual = $P{ID_CENTRO_COSTO})
+  AND ($P{PENDIENTES} OR e.estado NOT IN ('SOLICITADO', 'ANULADO'))
+ORDER BY ce.nombre, cc.codigo, e.serial_activo]]>
+	</queryString>
+    <field name="numero_activo" class="java.lang.String"/>
+    <field name="codigo" class="java.lang.String"/>
+    <field name="descripcion" class="java.lang.String"/>
+    <field name="numero_serie" class="java.lang.String"/>
+    <field name="centro" class="java.lang.String"/>
+    <field name="centro_costo" class="java.lang.String"/>
+    <field name="estado" class="java.lang.String"/>
+    <field name="responsable" class="java.lang.String"/>
+    <title>
+        <band height="104" splitType="Stretch">
+            <image scaleImage="RetainShape" onErrorType="Blank">
+                <reportElement x="0" y="0" width="42" height="42"/>
+                <imageExpression><![CDATA[new java.io.ByteArrayInputStream(java.util.Base64.getDecoder().decode("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"))]]></imageExpression>
+            </image>
+            <staticText>
+                <reportElement x="52" y="1" width="220" height="27" forecolor="#1B4D2E" uuid="16154012-da9e-47e7-86c9-12752858eda6"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="16" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Ñanday SIAA]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="52" y="28" width="220" height="13" forecolor="#5F6B66" uuid="d1059ded-9cef-47c9-a60c-87068f72208d"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isItalic="true"/>
+                </textElement>
+                <text><![CDATA[Sistema Integrado de Administración de Almacenes]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="54" width="802" height="22" forecolor="#1F4E79" uuid="8a367edd-17c5-4574-92b6-2e6452e4c1ea"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="14" isBold="true"/>
+                </textElement>
+                <text><![CDATA[LISTADO DE ACTIVOS FIJOS]]></text>
+            </staticText>
+            <line>
+                <reportElement x="0" y="79" width="802" height="1" forecolor="#1B4D2E" uuid="da17dbc6-9ecc-40bf-bf1c-095d6cf975fd"/>
+            </line>
+            <textField isBlankWhenNull="true">
+                <reportElement x="0" y="84" width="400" height="14" forecolor="#5F6B66" uuid="f312a917-12f6-452c-b5d6-256014295c62"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Generado por: " + $P{USUARIO}]]></textFieldExpression>
+            </textField>
+            <textField isBlankWhenNull="true">
+                <reportElement x="402" y="84" width="400" height="14" forecolor="#5F6B66" uuid="240738fd-1f73-4190-8a93-73a261e98f71"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Fecha: " + new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format($P{FECHA})]]></textFieldExpression>
+            </textField>
+            <rectangle>
+                <reportElement x="0" y="44" width="802" height="3" mode="Opaque" forecolor="#1B4D2E" backcolor="#1B4D2E"/>
+                <graphicElement>
+                    <pen lineWidth="0.0"/>
+                </graphicElement>
+            </rectangle>
+            <rectangle>
+                <reportElement x="0" y="44" width="90" height="3" mode="Opaque" forecolor="#C2410C" backcolor="#C2410C"/>
+                <graphicElement>
+                    <pen lineWidth="0.0"/>
+                </graphicElement>
+            </rectangle>
+        </band>
+    </title>
+    <columnHeader>
+        <band height="28" splitType="Stretch">
+            <rectangle>
+                <reportElement mode="Opaque" x="0" y="0" width="802" height="28" forecolor="#1F4E79" backcolor="#1F4E79" uuid="0eea204d-5343-48d4-8ace-7963272711a8"/>
+                <graphicElement>
+                    <pen lineWidth="0.0"/>
+                </graphicElement>
+            </rectangle>
+            <staticText>
+                <reportElement x="4" y="4" width="69" height="20" forecolor="#FFFFFF" uuid="40bcb20f-b136-4278-a4fb-a8949350ba49"/>
+                <box leftPadding="3" rightPadding="3"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[N° activo]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="79" y="4" width="59" height="20" forecolor="#FFFFFF" uuid="8571798d-8155-495e-8db4-3cec50cf0c95"/>
+                <box leftPadding="3" rightPadding="3"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Código]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="144" y="4" width="164" height="20" forecolor="#FFFFFF" uuid="40af5004-036e-4555-b638-767537405776"/>
+                <box leftPadding="3" rightPadding="3"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Descripción]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="314" y="4" width="89" height="20" forecolor="#FFFFFF" uuid="38f9dcdf-25fb-4196-9732-2b009ece8771"/>
+                <box leftPadding="3" rightPadding="3"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[N° de serie]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="409" y="4" width="94" height="20" forecolor="#FFFFFF" uuid="6e786acb-256c-4a3c-a46a-78d854a5c95f"/>
+                <box leftPadding="3" rightPadding="3"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Centro]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="509" y="4" width="129" height="20" forecolor="#FFFFFF" uuid="102080bf-42fa-48b1-bad0-04447d3b3f87"/>
+                <box leftPadding="3" rightPadding="3"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Centro de costo]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="644" y="4" width="61" height="20" forecolor="#FFFFFF" uuid="ffc48334-3ce4-4594-aab0-f4780d8983a1"/>
+                <box leftPadding="3" rightPadding="3"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Estado]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="711" y="4" width="89" height="20" forecolor="#FFFFFF" uuid="904b1283-a93d-4c95-81ac-50727f3ed966"/>
+                <box leftPadding="3" rightPadding="3"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Responsable]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+    <detail>
+        <band height="24" splitType="Stretch">
+            <rectangle>
+                <reportElement mode="Opaque" x="0" y="0" width="802" height="24" forecolor="#F1F5FA" backcolor="#F1F5FA" uuid="9ffefdd9-7107-43e7-8f99-26444fa860e6">
+                    <printWhenExpression><![CDATA[Boolean.valueOf($V{REPORT_COUNT}.intValue() % 2 == 0)]]></printWhenExpression>
+                </reportElement>
+                <graphicElement>
+                    <pen lineWidth="0.0"/>
+                </graphicElement>
+            </rectangle>
+            <line>
+                <reportElement x="0" y="23" width="802" height="1" forecolor="#D5DED7" uuid="23c8196a-4635-4173-bc21-39f4f2eda8ac"/>
+            </line>
+            <textField isBlankWhenNull="true">
+                <reportElement x="4" y="2" width="69" height="20" forecolor="#263238" uuid="59a2813d-b723-4270-abc1-16f16ce3b7b4"/>
+                <box leftPadding="3" rightPadding="3"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{numero_activo}.startsWith("PEND-") ? "Pendiente" : $F{numero_activo}]]></textFieldExpression>
+            </textField>
+            <textField isBlankWhenNull="true">
+                <reportElement x="79" y="2" width="59" height="20" forecolor="#263238" uuid="7e1dd79e-2638-44e0-b8ae-79eb9235d9fd"/>
+                <box leftPadding="3" rightPadding="3"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{codigo}]]></textFieldExpression>
+            </textField>
+            <textField isBlankWhenNull="true">
+                <reportElement x="144" y="2" width="164" height="20" forecolor="#263238" uuid="a30f9ce4-b56c-4e1a-8373-54317a8e51ab"/>
+                <box leftPadding="3" rightPadding="3"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
+            </textField>
+            <textField isBlankWhenNull="true">
+                <reportElement x="314" y="2" width="89" height="20" forecolor="#263238" uuid="4a73dbc8-80c9-4333-a11f-c476ce48f9fa"/>
+                <box leftPadding="3" rightPadding="3"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{numero_serie}]]></textFieldExpression>
+            </textField>
+            <textField isBlankWhenNull="true">
+                <reportElement x="409" y="2" width="94" height="20" forecolor="#263238" uuid="69d73fb8-d0d9-49ad-b726-2fe0e58d1364"/>
+                <box leftPadding="3" rightPadding="3"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{centro}]]></textFieldExpression>
+            </textField>
+            <textField isBlankWhenNull="true">
+                <reportElement x="509" y="2" width="129" height="20" forecolor="#263238" uuid="fe35fc3e-8f0c-43e5-b714-5d2fc3423fac"/>
+                <box leftPadding="3" rightPadding="3"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{centro_costo}]]></textFieldExpression>
+            </textField>
+            <textField isBlankWhenNull="true">
+                <reportElement x="644" y="2" width="61" height="20" forecolor="#263238" uuid="7708bfd7-d812-4c24-810f-eb111e8c1131"/>
+                <box leftPadding="3" rightPadding="3"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{estado}]]></textFieldExpression>
+            </textField>
+            <textField isBlankWhenNull="true">
+                <reportElement x="711" y="2" width="89" height="20" forecolor="#263238" uuid="80718f0f-05ca-491a-9d80-26836ac705e6"/>
+                <box leftPadding="3" rightPadding="3"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{responsable} == null ? "-" : $F{responsable}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+    <pageFooter>
+        <band height="25" splitType="Stretch">
+            <line>
+                <reportElement x="0" y="0" width="802" height="1" forecolor="#C9D3CC" uuid="54d5fb61-0ea7-46ef-9ef6-9abfab793d48"/>
+            </line>
+            <textField>
+                <reportElement x="0" y="5" width="672" height="14" forecolor="#7A8680"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Ñanday SIAA  •  Sistema Integrado de Administración de Almacenes"]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="672" y="5" width="100" height="14" forecolor="#7A8680"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER} + " de"]]></textFieldExpression>
+            </textField>
+            <textField evaluationTime="Report">
+                <reportElement x="772" y="5" width="30" height="14" forecolor="#7A8680"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+    <summary>
+        <band height="36" splitType="Stretch">
+            <rectangle radius="4">
+                <reportElement mode="Opaque" x="0" y="4" width="802" height="26" forecolor="#B9D7BF" backcolor="#E8F2EA" uuid="f1cf82b5-a6a7-4464-aebb-cf6ef114055f"/>
+                <graphicElement>
+                    <pen lineWidth="0.75" lineColor="#B9D7BF"/>
+                </graphicElement>
+            </rectangle>
+            <textField isBlankWhenNull="true">
+                <reportElement x="0" y="4" width="802" height="26" forecolor="#1B4D2E" uuid="543751c4-d2df-4a9f-a57e-60e2059ba78c"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Total de activos: " + $V{REPORT_COUNT}]]></textFieldExpression>
+            </textField>
+        </band>
+    </summary>
+</jasperReport>

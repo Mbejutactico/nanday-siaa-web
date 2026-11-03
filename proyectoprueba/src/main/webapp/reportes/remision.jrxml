@@ -1,0 +1,578 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="remision" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e20130c4-e1fd-4c32-938c-e488bc87f5b2">
+    <property name="ireport.zoom" value="1.0"/>
+    <property name="ireport.x" value="0"/>
+    <property name="ireport.y" value="0"/>
+    <parameter name="ID_REMISION" class="java.lang.Integer">
+        <defaultValueExpression><![CDATA[Integer.valueOf(0)]]></defaultValueExpression>
+    </parameter>
+    <parameter name="USUARIO" class="java.lang.String">
+        <defaultValueExpression><![CDATA["Sistema"]]></defaultValueExpression>
+    </parameter>
+    <parameter name="FECHA" class="java.util.Date">
+        <defaultValueExpression><![CDATA[new java.util.Date()]]></defaultValueExpression>
+    </parameter>
+    <queryString>
+		<![CDATA[SELECT
+    r.numero_remision, r.tipo_remision, r.fecha_hora, r.anulada, r.motivo_anulacion, r.observacion,
+    TRIM(COALESCE(r.transportista_nombre, '') || ' ' || COALESCE(r.transportista_apellido, '')) AS transportista,
+    r.transportista_ci,
+    NULLIF(TRIM(COALESCE(r.vehiculo_marca, '') || ' ' || COALESCE(r.vehiculo_modelo, '')), '') AS vehiculo,
+    r.vehiculo_chapa,
+    ue.nombre || ' ' || ue.apellido AS emitido_por,
+    CASE r.tipo_remision
+        WHEN 'SALIDA_INSUMOS' THEN 'OT ' || o.numero_ot || ' - ' || o.titulo
+        WHEN 'TRANSFERENCIA' THEN 'Transferencia ' || t.numero
+        WHEN 'SALIDA_ACTIVOS' THEN 'Solicitud ' || sa.numero || CASE sa.tipo WHEN 'REPARACION' THEN ' - Reparación'
+                                                                    WHEN 'ENTREGA_OT' THEN ' - Entrega por OT ' || COALESCE(o.numero_ot, '')
+                                                                    ELSE ' - Transferencia entre sucursales' END
+        ELSE '' END AS referencia,
+    CASE r.tipo_remision
+        WHEN 'SALIDA_INSUMOS' THEN 'Centro: ' || COALESCE(c.nombre, '') || '  |  Centro de costo: ' || COALESCE(cc.codigo || ' - ' || cc.descripcion, cc.codigo, '')
+                                   || '  |  Solicitante: ' || COALESCE(us.nombre || ' ' || us.apellido, '')
+        WHEN 'TRANSFERENCIA' THEN 'Desde: ' || COALESCE(ao.nombre, '') || '  ->  Hacia: ' || COALESCE(ad.nombre, '')
+        WHEN 'SALIDA_ACTIVOS' THEN CASE WHEN sa.tipo = 'REPARACION' THEN 'Proveedor (reparación): ' || COALESCE(pv.razon_social, '')
+                                        ELSE 'Destino: ' || COALESCE(csa.nombre, '') || ' / ' || COALESCE(ccsa.codigo || ' - ' || ccsa.descripcion, ccsa.codigo, '') END
+        ELSE '' END AS referencia_detalle,
+    CASE r.tipo_remision
+        WHEN 'SALIDA_INSUMOS' THEN 'Entrega de insumos por orden de trabajo'
+        WHEN 'TRANSFERENCIA' THEN 'Traslado de insumos entre almacenes'
+        WHEN 'SALIDA_ACTIVOS' THEN CASE sa.tipo WHEN 'REPARACION' THEN 'Envío de activos a reparación'
+                                                WHEN 'ENTREGA_OT' THEN 'Entrega de activos por orden de trabajo'
+                                                ELSE 'Traslado de activos entre sucursales' END
+        ELSE '' END AS motivo_traslado,
+    CASE r.tipo_remision
+        WHEN 'SALIDA_INSUMOS' THEN (SELECT string_agg(DISTINCT a2.nombre || ' (' || COALESCE(c2.nombre, '') || ')', ', ')
+                                      FROM detalle_ot d2 JOIN almacenes a2 ON a2.id_almacen = d2.id_almacen
+                                      LEFT JOIN centros c2 ON c2.id_centro = a2.id_centro WHERE d2.id_remision = r.id_remision)
+        WHEN 'TRANSFERENCIA' THEN ao.nombre || ' (' || COALESCE(cao.nombre, '') || ')'
+        WHEN 'SALIDA_ACTIVOS' THEN (SELECT string_agg(DISTINCT c3.nombre, ', ') FROM solicitudes_activos_detalle d3
+                                      JOIN centros c3 ON c3.id_centro = d3.id_centro_origen WHERE d3.id_solicitud = sa.id_solicitud)
+        ELSE '' END AS partida,
+    CASE r.tipo_remision
+        WHEN 'SALIDA_INSUMOS' THEN (SELECT string_agg(DISTINCT NULLIF(CONCAT_WS(' - ', NULLIF(a2.ubicacion, ''), NULLIF(c2.direccion, '')), ''), '; ')
+                                      FROM detalle_ot d2 JOIN almacenes a2 ON a2.id_almacen = d2.id_almacen
+                                      LEFT JOIN centros c2 ON c2.id_centro = a2.id_centro WHERE d2.id_remision = r.id_remision)
+        WHEN 'TRANSFERENCIA' THEN NULLIF(CONCAT_WS(' - ', NULLIF(ao.ubicacion, ''), NULLIF(cao.direccion, '')), '')
+        WHEN 'SALIDA_ACTIVOS' THEN (SELECT string_agg(DISTINCT c3.direccion, '; ') FROM solicitudes_activos_detalle d3
+                                      JOIN centros c3 ON c3.id_centro = d3.id_centro_origen WHERE d3.id_solicitud = sa.id_solicitud)
+        ELSE NULL END AS partida_direccion,
+    CASE r.tipo_remision
+        WHEN 'SALIDA_INSUMOS' THEN COALESCE(c.nombre, '') || ' / ' || COALESCE(cc.codigo || ' - ' || cc.descripcion, cc.codigo, '')
+        WHEN 'TRANSFERENCIA' THEN ad.nombre || ' (' || COALESCE(cad.nombre, '') || ')'
+        WHEN 'SALIDA_ACTIVOS' THEN CASE WHEN sa.tipo = 'REPARACION' THEN 'Proveedor: ' || COALESCE(pv.razon_social, '') || COALESCE(' (RUC ' || pv.ruc || ')', '')
+                                        ELSE COALESCE(csa.nombre, '') || ' / ' || COALESCE(ccsa.codigo || ' - ' || ccsa.descripcion, ccsa.codigo, '') END
+        ELSE '' END AS llegada,
+    CASE r.tipo_remision
+        WHEN 'SALIDA_INSUMOS' THEN c.direccion
+        WHEN 'TRANSFERENCIA' THEN NULLIF(CONCAT_WS(' - ', NULLIF(ad.ubicacion, ''), NULLIF(cad.direccion, '')), '')
+        WHEN 'SALIDA_ACTIVOS' THEN CASE WHEN sa.tipo = 'REPARACION' THEN pv.direccion ELSE csa.direccion END
+        ELSE NULL END AS llegada_direccion,
+    cp.copia, cp.ejemplar, cp.para_quien,
+    l.codigo, l.descripcion, l.unidad, l.cantidad, l.almacen
+FROM remisiones r
+LEFT JOIN usuarios ue       ON ue.id_usuario = r.id_usuario_emite
+LEFT JOIN ot o              ON o.id_ot = r.id_ot
+LEFT JOIN centros c         ON c.id_centro = o.id_centro
+LEFT JOIN centros_costo cc  ON cc.id_centro_costo = o.id_centro_costo
+LEFT JOIN usuarios us       ON us.id_usuario = o.id_usuario_solic
+LEFT JOIN transferencias t  ON t.id_transferencia = r.id_transferencia
+LEFT JOIN almacenes ao      ON ao.id_almacen = t.id_almacen_origen
+LEFT JOIN almacenes ad      ON ad.id_almacen = t.id_almacen_destino
+LEFT JOIN centros cao       ON cao.id_centro = ao.id_centro
+LEFT JOIN centros cad       ON cad.id_centro = ad.id_centro
+LEFT JOIN solicitudes_activos sa ON sa.id_solicitud = r.id_solicitud_activo
+LEFT JOIN proveedores pv    ON pv.id_proveedor = sa.id_proveedor
+LEFT JOIN centros csa       ON csa.id_centro = sa.id_centro_destino
+LEFT JOIN centros_costo ccsa ON ccsa.id_centro_costo = sa.id_centro_costo_destino
+LEFT JOIN (
+    SELECT rd.id_remision, rd.codigo, rd.descripcion, rd.unidad, rd.cantidad, rd.origen AS almacen, rd.orden
+      FROM remisiones_detalle rd
+) l ON l.id_remision = r.id_remision
+CROSS JOIN (VALUES (1, 'ORIGINAL', 'Destinatario de las mercaderías'),
+                   (2, 'DUPLICADO', 'Remitente de las mercaderías'),
+                   (3, 'TRIPLICADO', 'Administración Tributaria'),
+                   (4, 'CUADRUPLICADO', 'Transportista')) AS cp(copia, ejemplar, para_quien)
+WHERE r.id_remision = $P{ID_REMISION}
+ORDER BY cp.copia, l.orden]]>
+	</queryString>
+    <field name="numero_remision" class="java.lang.String"/>
+    <field name="tipo_remision" class="java.lang.String"/>
+    <field name="fecha_hora" class="java.sql.Timestamp"/>
+    <field name="anulada" class="java.lang.Boolean"/>
+    <field name="motivo_anulacion" class="java.lang.String"/>
+    <field name="observacion" class="java.lang.String"/>
+    <field name="transportista" class="java.lang.String"/>
+    <field name="transportista_ci" class="java.lang.String"/>
+    <field name="vehiculo" class="java.lang.String"/>
+    <field name="vehiculo_chapa" class="java.lang.String"/>
+    <field name="emitido_por" class="java.lang.String"/>
+    <field name="referencia" class="java.lang.String"/>
+    <field name="referencia_detalle" class="java.lang.String"/>
+    <field name="motivo_traslado" class="java.lang.String"/>
+    <field name="partida" class="java.lang.String"/>
+    <field name="partida_direccion" class="java.lang.String"/>
+    <field name="llegada" class="java.lang.String"/>
+    <field name="llegada_direccion" class="java.lang.String"/>
+    <field name="copia" class="java.lang.Integer"/>
+    <field name="ejemplar" class="java.lang.String"/>
+    <field name="para_quien" class="java.lang.String"/>
+    <field name="codigo" class="java.lang.String"/>
+    <field name="descripcion" class="java.lang.String"/>
+    <field name="unidad" class="java.lang.String"/>
+    <field name="cantidad" class="java.lang.Integer"/>
+    <field name="almacen" class="java.lang.String"/>
+    <variable name="TOTAL_UNIDADES" class="java.lang.Integer" resetType="Group" resetGroup="copia" calculation="Sum">
+        <variableExpression><![CDATA[$F{cantidad}]]></variableExpression>
+    </variable>
+    <variable name="ITEMS" class="java.lang.Integer" resetType="Group" resetGroup="copia" calculation="Count">
+        <variableExpression><![CDATA[$F{codigo}]]></variableExpression>
+    </variable>
+    <group name="copia" isStartNewPage="true" isResetPageNumber="true">
+        <groupExpression><![CDATA[$F{copia}]]></groupExpression>
+        <groupHeader>
+            <band height="328">
+                <image scaleImage="RetainShape" onErrorType="Blank">
+                    <reportElement x="0" y="0" width="38" height="38"/>
+                    <imageExpression><![CDATA[new java.io.ByteArrayInputStream(java.util.Base64.getDecoder().decode("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"))]]></imageExpression>
+                </image>
+                <staticText>
+                    <reportElement x="46" y="0" width="204" height="24" uuid="6403e7d0-04ac-4ecf-b213-c6882666b20d" forecolor="#1B4D2E"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="16" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Ñanday SIAA]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="46" y="24" width="204" height="14" uuid="317aa8bc-4436-4d80-a49f-f5e36f906325" forecolor="#5F6B66"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[RUC: 80000000-0  |  San Lorenzo, Paraguay]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="300" y="0" width="255" height="24" uuid="3f3d4ce0-4aa8-48da-91eb-e5cb0c57ce11" forecolor="#1F4E79"/>
+                    <textElement textAlignment="Right" verticalAlignment="Middle">
+                        <font size="16" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[NOTA DE REMISIÓN]]></text>
+                </staticText>
+                <textField isBlankWhenNull="true">
+                    <reportElement x="300" y="24" width="255" height="16" uuid="24b3e921-8020-4332-9cb0-871688777caa" forecolor="#1F4E79"/>
+                    <textElement textAlignment="Right" verticalAlignment="Middle">
+                        <font size="11" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA["N° " + $F{numero_remision}]]></textFieldExpression>
+                </textField>
+                <rectangle>
+                    <reportElement x="0" y="42" width="555" height="2" mode="Opaque" forecolor="#1B4D2E" backcolor="#1B4D2E"/>
+                    <graphicElement>
+                        <pen lineWidth="0.0"/>
+                    </graphicElement>
+                </rectangle>
+                <rectangle>
+                    <reportElement x="0" y="42" width="90" height="2" mode="Opaque" forecolor="#C2410C" backcolor="#C2410C"/>
+                    <graphicElement>
+                        <pen lineWidth="0.0"/>
+                    </graphicElement>
+                </rectangle>
+                <textField isBlankWhenNull="true">
+                    <reportElement mode="Opaque" backcolor="#1B4D2E" forecolor="#FFFFFF" x="0" y="46" width="555" height="20" uuid="5d083475-935e-477d-bab6-28a189dd3265"/>
+                    <box leftPadding="3" rightPadding="3"/>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="11" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$F{ejemplar} + ":  " + $F{para_quien}]]></textFieldExpression>
+                </textField>
+                <textField isBlankWhenNull="true">
+                    <reportElement mode="Opaque" backcolor="#B91C1C" forecolor="#FFFFFF" x="0" y="68" width="555" height="18" uuid="83bfa2c2-0dc3-4505-9dd5-9ae84765d4e9">
+                        <printWhenExpression><![CDATA[Boolean.TRUE.equals($F{anulada})]]></printWhenExpression>
+                    </reportElement>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="10" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA["ANULADA: " + ($F{motivo_anulacion} == null ? "" : $F{motivo_anulacion})]]></textFieldExpression>
+                </textField>
+                <staticText>
+                    <reportElement mode="Opaque" backcolor="#E3ECF6" x="0" y="90" width="555" height="14" uuid="e8efad23-bcfb-45ba-a02f-160b5d7407ed" forecolor="#1F4E79"/>
+                    <box leftPadding="6"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="9" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[DATOS DEL TRASLADO]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="0" y="108" width="80" height="14" uuid="7d148dd0-365d-4ad9-a192-772fb40074dd"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="9" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Tipo:]]></text>
+                </staticText>
+                <textField isBlankWhenNull="true">
+                    <reportElement x="80" y="108" width="250" height="14" uuid="6584a3d0-152c-401b-b3ac-a06074ea76ca"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="9"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA["SALIDA_INSUMOS".equals($F{tipo_remision}) ? "Salida de insumos (orden de trabajo)" : ("TRANSFERENCIA".equals($F{tipo_remision}) ? "Transferencia entre almacenes" : "Salida de activos")]]></textFieldExpression>
+                </textField>
+                <staticText>
+                    <reportElement x="335" y="108" width="80" height="14" uuid="25bd332f-a1db-4f49-8fde-9e8b8435485d"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="9" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Fecha y hora:]]></text>
+                </staticText>
+                <textField isBlankWhenNull="true" pattern="dd/MM/yyyy HH:mm">
+                    <reportElement x="415" y="108" width="140" height="14" uuid="b7482699-bc86-45ba-b976-c5f2e5038760"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="9"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$F{fecha_hora}]]></textFieldExpression>
+                </textField>
+                <staticText>
+                    <reportElement x="0" y="124" width="80" height="14" uuid="2267d99e-6e47-4aab-aad8-2052fafb7ed6"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="9" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Referencia:]]></text>
+                </staticText>
+                <textField isBlankWhenNull="true">
+                    <reportElement x="80" y="124" width="250" height="14" uuid="d25fb452-1049-4834-8377-f658eb8d5419"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="9"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$F{referencia}]]></textFieldExpression>
+                </textField>
+                <staticText>
+                    <reportElement x="335" y="124" width="80" height="14" uuid="3892f2d9-4f99-4e41-a6ca-fecfe0f4844f"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="9" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Emitida por:]]></text>
+                </staticText>
+                <textField isBlankWhenNull="true">
+                    <reportElement x="415" y="124" width="140" height="14" uuid="257a0860-57da-4ace-bd85-a517bdb2a104"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="9"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$F{emitido_por}]]></textFieldExpression>
+                </textField>
+                <staticText>
+                    <reportElement x="0" y="140" width="110" height="14" uuid="f4d4b8d6-2549-41ae-90e5-d9d92e7e5c5a"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="9" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Motivo del traslado:]]></text>
+                </staticText>
+                <textField isBlankWhenNull="true">
+                    <reportElement x="110" y="140" width="445" height="14" uuid="eabd2ead-5aa9-4112-9350-3306b767b134"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="9"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$F{motivo_traslado}]]></textFieldExpression>
+                </textField>
+                <staticText>
+                    <reportElement mode="Opaque" backcolor="#E3ECF6" x="0" y="160" width="275" height="14" uuid="03b6c3a7-eb5e-4cf7-916a-f21be92064d5" forecolor="#1F4E79"/>
+                    <box leftPadding="6"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="9" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[PUNTO DE PARTIDA (ORIGEN)]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement mode="Opaque" backcolor="#E3ECF6" x="280" y="160" width="275" height="14" uuid="b8e004eb-8869-4b1d-af7f-6bf00d7fd99b" forecolor="#1F4E79"/>
+                    <box leftPadding="6"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="9" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[PUNTO DE LLEGADA (DESTINO)]]></text>
+                </staticText>
+                <textField isBlankWhenNull="true">
+                    <reportElement x="0" y="176" width="275" height="26" uuid="9c09da4e-5595-401b-8713-78409eeffffa"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="9" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$F{partida}]]></textFieldExpression>
+                </textField>
+                <textField isBlankWhenNull="true">
+                    <reportElement x="280" y="176" width="275" height="26" uuid="73a621d1-2acd-4fa6-8903-864be17df9dc"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="9" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$F{llegada}]]></textFieldExpression>
+                </textField>
+                <textField isBlankWhenNull="true">
+                    <reportElement x="0" y="202" width="275" height="14" uuid="978c2723-54b3-4476-a226-6981cfa6b283"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA["Dirección: " + ($F{partida_direccion} == null ? "-" : $F{partida_direccion})]]></textFieldExpression>
+                </textField>
+                <textField isBlankWhenNull="true">
+                    <reportElement x="280" y="202" width="275" height="14" uuid="7be6296d-2493-488c-907a-848cd125785a"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA["Dirección: " + ($F{llegada_direccion} == null ? "-" : $F{llegada_direccion})]]></textFieldExpression>
+                </textField>
+                <staticText>
+                    <reportElement mode="Opaque" backcolor="#E3ECF6" x="0" y="222" width="555" height="14" uuid="cef8d830-e37c-4140-b73a-d062de9ce5be" forecolor="#1F4E79"/>
+                    <box leftPadding="6"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="9" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[TRANSPORTE]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="0" y="240" width="80" height="14" uuid="5210815f-1cd7-4346-955a-61efc0c3c406"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="9" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Transportista:]]></text>
+                </staticText>
+                <textField isBlankWhenNull="true">
+                    <reportElement x="80" y="240" width="250" height="14" uuid="05342299-1146-47f4-ace5-63bbb0b58b9a"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="9"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[($F{transportista} == null || $F{transportista}.isEmpty()) ? "-" : $F{transportista}]]></textFieldExpression>
+                </textField>
+                <staticText>
+                    <reportElement x="335" y="240" width="80" height="14" uuid="a2bb84e9-d8a2-48bf-9ede-aa7638b35ff0"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="9" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[C.I.:]]></text>
+                </staticText>
+                <textField isBlankWhenNull="true">
+                    <reportElement x="415" y="240" width="140" height="14" uuid="65452cfe-3d94-43fd-9e77-da61ed198a23"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="9"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$F{transportista_ci} == null ? "-" : $F{transportista_ci}]]></textFieldExpression>
+                </textField>
+                <staticText>
+                    <reportElement x="0" y="256" width="80" height="14" uuid="3aafd154-d6fa-4205-9d75-efe1d37caf26"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="9" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Vehículo:]]></text>
+                </staticText>
+                <textField isBlankWhenNull="true">
+                    <reportElement x="80" y="256" width="250" height="14" uuid="57913695-13b5-4bb8-a3d3-213b27d840c6"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="9"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$F{vehiculo} == null ? "Sin vehículo" : $F{vehiculo}]]></textFieldExpression>
+                </textField>
+                <staticText>
+                    <reportElement x="335" y="256" width="80" height="14" uuid="c68dee49-ecf6-4b04-a8a0-2aef1f2f5ae9"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="9" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Chapa:]]></text>
+                </staticText>
+                <textField isBlankWhenNull="true">
+                    <reportElement x="415" y="256" width="140" height="14" uuid="e2b06e66-9082-4d4d-8a69-984b4ddb21cd"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="9"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$F{vehiculo_chapa} == null ? "-" : $F{vehiculo_chapa}]]></textFieldExpression>
+                </textField>
+                <staticText>
+                    <reportElement x="0" y="272" width="80" height="14" uuid="3fc77222-8e4c-4858-97b7-acba86236b87"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="9" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Observación:]]></text>
+                </staticText>
+                <textField isBlankWhenNull="true">
+                    <reportElement x="80" y="272" width="475" height="14" uuid="362765f5-390e-4040-a485-d4e381a829b5"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="9"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$F{observacion} == null ? "-" : $F{observacion}]]></textFieldExpression>
+                </textField>
+                <staticText>
+                    <reportElement mode="Opaque" backcolor="#E3ECF6" x="0" y="292" width="555" height="14" uuid="47d5d61a-f619-441d-8c13-2d1aed815e57" forecolor="#1F4E79"/>
+                    <box leftPadding="6"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="9" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[DETALLE DE LAS MERCADERÍAS]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement mode="Opaque" backcolor="#1F4E79" x="0" y="310" width="80" height="18" uuid="d4e30812-69b3-4e17-a4cd-39750e4900c1" forecolor="#FFFFFF"/>
+                    <box leftPadding="3" rightPadding="3"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Código / N° activo]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement mode="Opaque" backcolor="#1F4E79" x="80" y="310" width="245" height="18" uuid="40ee9ecf-74dd-4119-a8b3-476b971f4d3b" forecolor="#FFFFFF"/>
+                    <box leftPadding="3" rightPadding="3"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="9" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Descripción]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement mode="Opaque" backcolor="#1F4E79" x="325" y="310" width="60" height="18" uuid="0cc09d45-ec75-47e0-b827-d55584fb9887" forecolor="#FFFFFF"/>
+                    <box leftPadding="3" rightPadding="3"/>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="9" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Unidad]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement mode="Opaque" backcolor="#1F4E79" x="385" y="310" width="60" height="18" uuid="0af00018-418e-4201-82ad-cdffb960601a" forecolor="#FFFFFF"/>
+                    <box leftPadding="3" rightPadding="3"/>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="9" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Cantidad]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement mode="Opaque" backcolor="#1F4E79" x="445" y="310" width="110" height="18" uuid="da31748a-1e06-411c-bfd5-3b93e840823b" forecolor="#FFFFFF"/>
+                    <box leftPadding="3" rightPadding="3"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="9" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Origen]]></text>
+                </staticText>
+            </band>
+        </groupHeader>
+        <groupFooter>
+            <band height="126">
+                <line>
+                    <reportElement x="0" y="2" width="555" height="1" forecolor="#263238" uuid="ccf01aa2-407b-42ee-9b28-17456823947a"/>
+                </line>
+                <textField isBlankWhenNull="true">
+                    <reportElement x="0" y="6" width="555" height="14" uuid="92cdaf34-2b9d-47ef-a0b0-5740c0766cfb"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="9" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA["Ítems: " + $V{ITEMS} + "     Total de unidades: " + ($V{TOTAL_UNIDADES} == null ? 0 : $V{TOTAL_UNIDADES})]]></textFieldExpression>
+                </textField>
+                <line>
+                    <reportElement x="10" y="78" width="160" height="1" forecolor="#263238" uuid="787093e9-8c75-496b-81dc-05885f593769"/>
+                </line>
+                <staticText>
+                    <reportElement x="10" y="81" width="160" height="14" uuid="3c33fdda-d2c6-4d9c-98e9-dda7c3c0aefd"/>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[Entregado por (remitente)]]></text>
+                </staticText>
+                <line>
+                    <reportElement x="197" y="78" width="160" height="1" forecolor="#263238" uuid="cfaf3ff0-2d71-4ada-b23a-db5801cacedc"/>
+                </line>
+                <staticText>
+                    <reportElement x="197" y="81" width="160" height="14" uuid="8f5f4f7d-6363-4756-9f42-0b366a423e8b"/>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[Transportista]]></text>
+                </staticText>
+                <textField isBlankWhenNull="true">
+                    <reportElement x="197" y="95" width="160" height="12" uuid="71ee567d-147f-432d-967b-5f5a48a2dcf7"/>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="7"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$F{transportista}]]></textFieldExpression>
+                </textField>
+                <line>
+                    <reportElement x="385" y="78" width="160" height="1" forecolor="#263238" uuid="d6513906-90bd-4e3a-b0ee-2ed0ea8ea7b5"/>
+                </line>
+                <staticText>
+                    <reportElement x="385" y="81" width="160" height="14" uuid="92b20a06-20f6-4f75-b1c5-69863a582f82"/>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[Recibido por (destinatario)]]></text>
+                </staticText>
+                <textField isBlankWhenNull="true">
+                    <reportElement x="0" y="112" width="555" height="12" uuid="9302eed3-29a4-4f19-80be-d2b8b2fd10ce"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="7" isItalic="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA["Impreso por: " + $P{USUARIO} + "  -  " + new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format($P{FECHA})]]></textFieldExpression>
+                </textField>
+            </band>
+        </groupFooter>
+    </group>
+    <detail>
+        <band height="17">
+            <printWhenExpression><![CDATA[$F{codigo} != null]]></printWhenExpression>
+            <textField isBlankWhenNull="true">
+                <reportElement x="0" y="0" width="80" height="16" uuid="1ee475d7-a6c8-43f3-9cfe-5ea9b837a344"/>
+                <box leftPadding="3" rightPadding="3"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{codigo}]]></textFieldExpression>
+            </textField>
+            <textField isBlankWhenNull="true" isStretchWithOverflow="true">
+                <reportElement x="80" y="0" width="245" height="16" uuid="ef5410f8-9ee2-4a7c-83d9-efc62318d821"/>
+                <box leftPadding="3" rightPadding="3"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
+            </textField>
+            <textField isBlankWhenNull="true">
+                <reportElement x="325" y="0" width="60" height="16" uuid="94f0003d-82f1-44bc-aaa1-03a3b591888a"/>
+                <box leftPadding="3" rightPadding="3"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{unidad}]]></textFieldExpression>
+            </textField>
+            <textField isBlankWhenNull="true">
+                <reportElement x="385" y="0" width="60" height="16" uuid="b80b97c8-b642-4bad-a79a-397cc3662853"/>
+                <box leftPadding="3" rightPadding="3"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{cantidad}]]></textFieldExpression>
+            </textField>
+            <textField isBlankWhenNull="true">
+                <reportElement x="445" y="0" width="110" height="16" uuid="5b0e5abc-cf26-434a-a225-733a08b10006"/>
+                <box leftPadding="3" rightPadding="3"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{almacen}]]></textFieldExpression>
+            </textField>
+            <line>
+                <reportElement x="0" y="16" width="555" height="1" forecolor="#C9D3CC" uuid="45e126a0-de37-4360-95f3-252b38a7a573"/>
+            </line>
+        </band>
+    </detail>
+    <pageFooter>
+        <band height="16">
+            <textField isBlankWhenNull="true">
+                <reportElement x="0" y="0" width="400" height="14" uuid="f187a6b6-0fc8-4430-9f8c-f80208166367"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="7" isItalic="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Remisión " + $F{numero_remision} + "  -  " + $F{ejemplar} + " (" + $F{para_quien} + ")"]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="425" y="0" width="100" height="14" forecolor="#7A8680"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER} + " de"]]></textFieldExpression>
+            </textField>
+            <textField evaluationTime="Report">
+                <reportElement x="525" y="0" width="30" height="14" forecolor="#7A8680"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+</jasperReport>

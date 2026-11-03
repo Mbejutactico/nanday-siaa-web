@@ -1,0 +1,531 @@
+/*
+   Ñanday SIAA - estilos del sistema.
+   Dirección: shell moderna sobre el mismo JSP/AdminLTE.
+     - Navegación única (lateral); topbar solo utilidades + usuario.
+     - Tipografía Inter propia, más aire, radios amplios, sombras suaves.
+     - Héroes KPI con acento superior por módulo (un color por tarjeta).
+     - Encabezados de tabla claros (texto pizarra, subrayado verde).
+   */
+@font-face {
+    font-family: 'Inter';
+    src: url('../fonts/inter-latin-400.woff2') format('woff2');
+    font-weight: 400;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Inter';
+    src: url('../fonts/inter-latin-600.woff2') format('woff2');
+    font-weight: 600;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Inter';
+    src: url('../fonts/inter-latin-700.woff2') format('woff2');
+    font-weight: 700;
+    font-display: swap;
+}
+:root {
+    --nd-dark: #0a2e1a;
+    --nd-primary: #2E7D32;
+    --nd-deep: #1B5E20;
+    --nd-accent: #F57C00;
+    --nd-accent-deep: #E65100;
+    --nd-info: #1E88E5;
+    --nd-danger: #C62828;
+    --nd-slate: #374151;
+    --nd-muted: #6b7280;
+    --nd-bg: #f3f4f6;
+    --nd-border: #e5e7eb;
+}
+
+/* Base */
+body {
+    background: var(--nd-bg);
+    font-family: 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
+    color: var(--nd-slate);
+}
+.wrapper { min-height: 100vh; }
+.content-wrapper { background: var(--nd-bg); padding-bottom: 2rem; }
+/* Aire lateral: el contenido respira, nada toca el borde */
+.content-header { padding: 1.25rem 1.75rem 0; }
+.content-header > .container-fluid { padding-left: 0; padding-right: 0; }
+.content { padding: 0.75rem 1.75rem 1rem; }
+.content > .container-fluid { padding-left: 0; padding-right: 0; }
+.main-footer { padding-left: 1.75rem; padding-right: 1.75rem; }
+body.sidebar-collapse .content-wrapper,
+body.sidebar-collapse .main-footer {
+    margin-left: 4.6rem !important;
+}
+/* Título de sección: ceja + título grande */
+.content-header h1 {
+    color: #111827;
+    font-weight: 700;
+    font-size: 1.6rem;
+    margin-bottom: 0;
+}
+.content-header .breadcrumb { background: transparent; padding: 0; }
+.content-header .breadcrumb-item.active { color: var(--nd-muted); }
+
+/* Topbar: utilidades, sin menús de módulos */
+.main-header {
+    background-color: #fff;
+    border-bottom: 1px solid var(--nd-border);
+}
+.main-header .nav-link { color: var(--nd-slate) !important; }
+.main-header .nav-link:hover { color: var(--nd-primary) !important; }
+.main-header .user-chip {
+    color: var(--nd-slate);
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding-right: 0.25rem;
+}
+.main-header .user-chip i { color: var(--nd-primary); margin-right: 0.35rem; }
+
+/* Sidebar oscuro, enlaces sangrados */
+.main-sidebar, .main-sidebar::before {
+    background-color: var(--nd-dark) !important;
+}
+/* Ancho y margen del menú: los calcula AdminLTE */
+.sidebar-dark-primary .nav-sidebar .nav-link {
+    border-radius: 8px;
+    color: #d1d5db;
+}
+.sidebar-dark-primary .nav-sidebar .nav-link.active {
+    background-color: rgba(255, 255, 255, 0.10);
+    color: #fff;
+    box-shadow: inset 3px 0 0 var(--nd-accent);
+}
+.sidebar-dark-primary .nav-sidebar .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+    color: #fff;
+}
+/* Submenús: sangría leve y fondo propio para distinguirlos del módulo */
+.nav-sidebar .nav-treeview {
+    background-color: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+    margin: 0.15rem 0 0.35rem;
+    padding: 0.2rem 0;
+}
+.nav-sidebar .nav-treeview .nav-link { padding-left: 1.35rem; }
+.nav-sidebar .nav-treeview .nav-link .nav-icon { font-size: 0.95rem; }
+/* Etiquetas largas: bajan de línea en vez de pasar por debajo de la flecha. */
+body:not(.sidebar-collapse) .nav-sidebar .nav-link > p,
+.sidebar-collapse .main-sidebar:hover .nav-sidebar .nav-link > p,
+.sidebar-collapse .main-sidebar.sidebar-focused .nav-sidebar .nav-link > p {
+    display: inline-block;
+    vertical-align: middle;
+    max-width: calc(100% - 1.9rem);
+    padding-right: 1.7rem; /* lugar para la flecha del módulo */
+    white-space: normal;
+    line-height: 1.3;
+}
+body:not(.sidebar-collapse) .nav-sidebar .nav-treeview .nav-link > p,
+.sidebar-collapse .main-sidebar:hover .nav-sidebar .nav-treeview .nav-link > p,
+.sidebar-collapse .main-sidebar.sidebar-focused .nav-sidebar .nav-treeview .nav-link > p {
+    padding-right: 0; /* los submenús no tienen flecha */
+}
+.nav-sidebar .nav-link > p > .right { top: 50%; margin-top: -0.5em; }
+.nav-sidebar .nav-link > .nav-icon { vertical-align: middle; }
+/* Opción activa dentro de un submenú: mismo estilo oscuro AdminLTE la pintaba blanca */
+.sidebar-dark-primary .nav-sidebar .nav-treeview > .nav-item > .nav-link.active,
+.sidebar-dark-primary .nav-sidebar .nav-treeview > .nav-item > .nav-link.active:hover,
+.sidebar-dark-primary .nav-sidebar .nav-treeview > .nav-item > .nav-link.active:focus {
+    background-color: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    box-shadow: inset 3px 0 0 var(--nd-accent);
+}
+/* Menú colapsado (solo iconos): sin sangría, para que el icono no quede cortado */
+.sidebar-mini.sidebar-collapse .main-sidebar:not(.sidebar-focused):not(:hover) .nav-treeview .nav-link {
+    padding-left: 0.8rem;
+}
+.sidebar-mini.sidebar-collapse .main-sidebar:not(.sidebar-focused):not(:hover) .nav-link > p {
+    padding-right: 0;
+}
+.brand-link {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    background-color: var(--nd-dark);
+}
+.brand-text, .brand-link .brand-text {
+    color: #fff !important;
+    font-weight: 700;
+}
+.brand-image { border: 2px solid var(--nd-primary); }
+.user-panel .info a { color: #fff; }
+.user-panel .image img { border: 2px solid var(--nd-primary); }
+
+/* Héroes KPI */
+.hero {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: #fff;
+    border: 1px solid var(--nd-border);
+    border-top: 4px solid var(--nd-primary);
+    border-radius: 14px;
+    padding: 1.1rem 1.25rem;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+a.hero:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.10);
+}
+.hero-body { flex: 1; min-width: 0; }
+.hero-label {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--nd-muted);
+}
+.hero-number {
+    display: block;
+    font-size: 2.1rem;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: #111827;
+}
+.hero-sub { display: block; font-size: 0.75rem; color: var(--nd-muted); }
+.hero-icon {
+    flex: 0 0 auto;
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    background: rgba(46, 125, 50, 0.12);
+    color: var(--nd-primary);
+}
+.hero-blue { border-top-color: var(--nd-info); }
+.hero-blue .hero-icon { background: rgba(30, 136, 229, 0.12); color: var(--nd-info); }
+.hero-amber { border-top-color: var(--nd-accent); }
+.hero-amber .hero-icon { background: rgba(245, 124, 0, 0.14); color: var(--nd-accent-deep); }
+.hero-red { border-top-color: var(--nd-danger); }
+.hero-red .hero-icon { background: rgba(198, 40, 40, 0.10); color: var(--nd-danger); }
+.hero-teal { border-top-color: #00897b; }
+.hero-teal .hero-icon { background: rgba(0, 137, 123, 0.12); color: #00897b; }
+.hero-dark { border-top-color: var(--nd-dark); }
+.hero-dark .hero-icon { background: rgba(10, 46, 26, 0.08); color: var(--nd-dark); }
+
+/* Tarjetas */
+.card {
+    border-radius: 14px;
+    border: 1px solid var(--nd-border);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+/* Misma altura dentro de una fila: simetría vertical */
+.row > [class*="col-"] > .card,
+.row > [class*="col-"] > .hero {
+    height: calc(100% - 1rem);
+    margin-bottom: 1rem;
+}
+.card-body { padding: 1.25rem; }
+.card-header {
+    background: #fff;
+    border-bottom: 1px solid var(--nd-border);
+    padding: 0.9rem 1.25rem;
+}
+.card-title { color: #111827; font-weight: 700; font-size: 1rem; }
+.card-info:not(.card-outline) > .card-header,
+.card-success:not(.card-outline) > .card-header,
+.card-warning:not(.card-outline) > .card-header,
+.card-danger:not(.card-outline) > .card-header,
+.card-secondary:not(.card-outline) > .card-header,
+.card-primary:not(.card-outline) > .card-header {
+    background-color: #fff;
+}
+.card-info:not(.card-outline) > .card-header .card-title,
+.card-success:not(.card-outline) > .card-header .card-title,
+.card-warning:not(.card-outline) > .card-header .card-title,
+.card-danger:not(.card-outline) > .card-header .card-title,
+.card-secondary:not(.card-outline) > .card-header .card-title,
+.card-primary:not(.card-outline) > .card-header .card-title {
+    color: #111827;
+}
+.card.card-outline { border-top: 3px solid var(--nd-accent); }
+.card-footer { background: #fff; border-top: 1px solid var(--nd-border); }
+
+/* Tablas: encabezado claro */
+table.dataTable thead th {
+    background-color: #fff;
+    color: var(--nd-slate);
+    border-bottom: 2px solid var(--nd-primary);
+}
+table.dataTable tbody tr:hover td {
+    background-color: rgba(46, 125, 50, 0.07);
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    background: var(--nd-primary) !important;
+    color: #fff !important;
+    border-color: var(--nd-primary);
+    border-radius: 8px;
+}
+table.dataTable > thead .sorting:before,
+table.dataTable > thead .sorting_asc:before,
+table.dataTable > thead .sorting_desc:before,
+table.dataTable > thead .sorting_asc_disabled:before,
+table.dataTable > thead .sorting_desc_disabled:before {
+    content: none;
+    display: none;
+}
+table.dataTable > thead .sorting:after,
+table.dataTable > thead .sorting_asc:after,
+table.dataTable > thead .sorting_desc:after {
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    color: var(--nd-accent-deep);
+    right: 0.6em;
+}
+table.dataTable > thead .sorting:after { content: "\f0dc"; opacity: 0.4; }
+table.dataTable > thead .sorting_asc:after { content: "\f0de"; opacity: 1; }
+table.dataTable > thead .sorting_desc:after { content: "\f0dd"; opacity: 1; }
+table.dataTable > thead .sorting_asc_disabled:after,
+table.dataTable > thead .sorting_desc_disabled:after {
+    content: none;
+}
+
+/* Botones e insignias */
+.btn-primary {
+    background-color: var(--nd-primary);
+    border-color: var(--nd-deep);
+    border-radius: 10px;
+}
+.btn-primary:hover { background-color: var(--nd-deep); border-color: var(--nd-deep); }
+.btn-warning {
+    background-color: var(--nd-accent);
+    border-color: var(--nd-accent-deep);
+    color: #fff;
+    border-radius: 10px;
+}
+.btn-warning:hover { background-color: var(--nd-accent-deep); border-color: var(--nd-accent-deep); color: #fff; }
+.btn-info { background-color: var(--nd-info); border-color: var(--nd-info); border-radius: 10px; }
+.badge-warning { background-color: var(--nd-accent); }
+.badge-success { background-color: var(--nd-primary); }
+.badge-info { background-color: var(--nd-info); }
+.text-warning { color: var(--nd-accent-deep) !important; }
+.text-danger { color: var(--nd-danger) !important; }
+
+/* Listas y alertas */
+.list-group-item {
+    border-left: 3px solid var(--nd-accent);
+    margin-bottom: 6px;
+    border-radius: 10px;
+}
+/* Tablero: las dos listas reparten el alto y los footers quedan alineados. */
+#ultimasCompras {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height: 100%;
+    margin-bottom: 0;
+}
+/* Listas sin borde dentro de tarjetas sin padding: nunca pegadas al borde. */
+.card .list-group-unbordered > .list-group-item {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+}
+.alert-info { background-color: #dbeafe; border-color: #bfdbfe; color: #1e40af; }
+.alert-info .icon { color: var(--nd-info); }
+
+/* Footer */
+.main-footer {
+    background-color: #fff;
+    border-top: 1px solid var(--nd-border);
+    color: var(--nd-muted);
+}
+.main-footer strong { color: var(--nd-deep); }
+
+/* Formularios */
+.form-control { border-radius: 10px; }
+.form-control:focus {
+    border-color: var(--nd-accent);
+    box-shadow: 0 0 0 0.2rem rgba(245, 124, 0, 0.20);
+}
+
+/* Tarjetas de resumen (small-box / info-box) */
+.small-box, .info-box .info-box-icon { --tile: #6b7280; --tile-bg: #f1f3f5; }
+.small-box.bg-info,      .info-box .info-box-icon.bg-info      { --tile: #1F5F8B; --tile-bg: #e8f0f6; }
+.small-box.bg-primary,   .info-box .info-box-icon.bg-primary   { --tile: #1B5E20; --tile-bg: #e6efe7; }
+.small-box.bg-success,   .info-box .info-box-icon.bg-success   { --tile: #2E7D32; --tile-bg: #e7f2e8; }
+.small-box.bg-warning,   .info-box .info-box-icon.bg-warning   { --tile: #B26A00; --tile-bg: #fbf1e0; }
+.small-box.bg-danger,    .info-box .info-box-icon.bg-danger    { --tile: #C62828; --tile-bg: #fae9e9; }
+.small-box.bg-secondary, .info-box .info-box-icon.bg-secondary { --tile: #6b7280; --tile-bg: #f1f3f5; }
+.small-box.bg-dark,      .info-box .info-box-icon.bg-dark      { --tile: #374151; --tile-bg: #eceef1; }
+.small-box.bg-indigo,    .info-box .info-box-icon.bg-indigo    { --tile: #4B4FA6; --tile-bg: #ececf7; }
+.small-box.bg-teal,      .info-box .info-box-icon.bg-teal      { --tile: #00796B; --tile-bg: #e3f1ef; }
+
+/* Small-box: indicadores de cabecera de cada módulo */
+body .small-box,
+body .small-box[class*="bg-"] {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    min-height: 76px;
+    margin-bottom: 1rem;
+    padding: 0.8rem 1rem 0.8rem 0.95rem;
+    background: #fff !important;
+    color: var(--nd-slate) !important;
+    border: 1px solid var(--nd-border);
+    border-left: 3px solid var(--tile);
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
+}
+body .small-box > .inner {
+    display: flex;
+    flex-direction: column-reverse;   /* etiqueta arriba, cifra abajo */
+    min-width: 0;
+    padding: 0;
+}
+body .small-box > .inner > h3 {
+    margin: 0;
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.15;
+    color: #111827;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+body .small-box > .inner > p {
+    margin: 0 0 0.2rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--nd-muted);
+}
+body .small-box > .icon {
+    position: static;
+    flex: 0 0 auto;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: var(--tile-bg);
+    color: var(--tile);
+}
+body .small-box > .icon > i[class] {
+    position: static !important;
+    font-size: 0.95rem !important;
+    transform: none !important;
+    transition: none;
+}
+body .small-box:hover { color: var(--nd-slate) !important; }
+@media (max-width: 575.98px) {
+    body .small-box > .icon { display: none !important; }
+}
+
+/* Info-box: resumen de informes y cabecera de las fichas */
+body .info-box {
+    align-items: center;
+    min-height: 64px;
+    margin-bottom: 1rem;
+    padding: 0.7rem 0.9rem;
+    background: #fff;
+    border: 1px solid var(--nd-border);
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05) !important;
+    transition: none;
+}
+body .info-box:hover { transform: none; }
+body .info-box .info-box-icon,
+body .info-box .info-box-icon[class*="bg-"] {
+    flex: 0 0 36px;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    box-shadow: none;
+    background: var(--tile-bg) !important;
+    color: var(--tile) !important;
+}
+body .info-box .info-box-content {
+    padding: 0 0 0 0.75rem;
+    line-height: 1.3;
+    min-width: 0;
+}
+body .info-box .info-box-text {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--nd-muted);
+}
+body .info-box .info-box-number {
+    margin-top: 0.1rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #111827;
+    font-variant-numeric: tabular-nums;
+}
+/* Informes: tarjetas sin ícono. */
+body .resumen-informe .info-box { min-height: 58px; border-left: 3px solid #1F5F8B; }
+body .resumen-informe .info-box .info-box-icon { display: none; }
+body .resumen-informe .info-box .info-box-content { padding-left: 0.15rem; }
+/* Las tarjetas del resumen de informes se reparten el ancho de la fila (ninguna queda sola abajo) */
+body .resumen-informe > [class*="col-"] { flex: 1 1 190px; max-width: none; }
+/* En pantallas chicas AdminLTE centra el texto: se mantiene alineado a la izquierda */
+body .small-box, body .small-box > .inner > p, body .small-box > .inner > h3 { text-align: left; }
+
+/* =====================================================================
+   Pantallas de menor resolución (portátiles, monitores 1024-1366 px)
+   ===================================================================== */
+/* El contenido define el alto: el pie queda siempre debajo de las tarjetas
+   y el menú lateral verde llega hasta el final de la página. */
+.wrapper .content-wrapper { height: auto; }
+
+/* Barra superior: se achica u oculta en pantallas chicas */
+@media (max-width: 1439.98px) {
+    .main-header .navbar-nav .nav-link { padding-left: .55rem; padding-right: .55rem; }
+}
+@media (max-width: 1199.98px) {
+    .main-header .navbar-nav:first-child > li.dropdown,
+    .main-header .navbar-nav:first-child > li.nav-item:not(:first-child):not(:nth-child(2)) { display: none !important; }
+}
+
+/* Tablas anchas: se desplazan dentro de su tarjeta en lugar de empujar la página */
+.dataTables_wrapper > .row > [class^="col-"],
+.dataTables_wrapper > .row > [class*=" col-"] { overflow-x: auto; }
+.card-body > .table-responsive, .card-body > .dataTables_wrapper { max-width: 100%; }
+
+/* Tablero: en "Últimas órdenes de compra" la fecha queda en su lugar
+   aunque el número y el estado ocupen todo el ancho */
+#ultimasCompras > .list-group-item { position: relative; padding-right: 7.5rem; }
+#ultimasCompras > .list-group-item > .badge.float-right { position: absolute; right: 1.25rem; top: .9rem; float: none !important; }
+
+/* Indicador de carga: barra superior y aviso en la esquina */
+.nanday-barra-carga {
+    position: fixed; top: 0; left: 0; height: 3px; width: 0; z-index: 2000;
+    background: linear-gradient(90deg, #2E7D32, #F9A825); opacity: 0; transition: opacity .2s;
+}
+.nanday-barra-carga.visible { opacity: 1; animation: nanday-avance 1.6s ease-in-out infinite; }
+@keyframes nanday-avance { 0% { width: 0; left: 0; } 50% { width: 60%; left: 20%; } 100% { width: 0; left: 100%; } }
+.nanday-carga {
+    position: fixed; right: 18px; bottom: 18px; z-index: 2000; display: none;
+    background: #1B4D2E; color: #FFFFFF; border-radius: 20px; padding: .4rem .9rem;
+    font-size: .85rem; box-shadow: 0 4px 12px rgba(0, 0, 0, .25);
+}
+.nanday-carga.visible { display: block; }
+
+/* Campana de notificaciones */
+#campanaNotif .campana-menu { width: 340px; max-width: 92vw; max-height: 75vh; overflow-y: auto; }
+#campanaNotif .campana-seccion { font-size: .7rem; text-transform: uppercase; letter-spacing: .05em; color: #5F6B63; padding-top: .6rem; }
+#campanaNotif .campana-item { display: flex; align-items: flex-start; white-space: normal; line-height: 1.25; padding-top: .45rem; padding-bottom: .45rem; }
+#campanaNotif .campana-item > i { margin-top: .15rem; width: 18px; text-align: center; }
+#campanaNotif .campana-nueva { background: #F1F8F2; font-weight: 600; }
+#campanaNotif .campana-nueva small { font-weight: normal; }
+#campanaNotif .campana-punto { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #C62828; margin-right: 6px; vertical-align: middle; }
+
+/* Gráficos del tablero */
+.grafico-caja { position: relative; height: 240px; }
+.grafico-vacio { height: 240px; display: flex; align-items: center; justify-content: center; color: #5F6B63; }
+
+/* Avisos (SweetAlert2) con la tipografía del sistema */
+.swal2-popup { font-family: inherit; }

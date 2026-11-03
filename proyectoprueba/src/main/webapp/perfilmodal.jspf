@@ -1,0 +1,99 @@
+<%--
+    perfilmodal.jspf
+    Fragmento incluido desde header.jsp: <%@ include file="perfilmodal.jspf" %>
+    Requiere sesion activa (ya validada por header.jsp antes de este include)
+--%>
+<%
+    String pf_nombre = (String) session.getAttribute("nombre");
+    String pf_apellido = (String) session.getAttribute("apellido");
+    String pf_foto = (String) session.getAttribute("foto_perfil");
+    if (pf_foto == null || pf_foto.isEmpty()) {
+        pf_foto = "dist/img/perfil_1.jpg";
+    }
+%>
+<div class="modal fade" id="modalPerfil" tabindex="-1" role="dialog" aria-labelledby="modalPerfilLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#1B4D2E;border-bottom:2px solid #C2410C;">
+                <h5 class="modal-title" id="modalPerfilLabel" style="color:#fff;">
+                    <i class="fas fa-user-circle"></i> Mi Perfil
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" style="color:#fff;">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <ul class="nav nav-tabs" id="tabsPerfil" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="tab-datos-link" data-toggle="tab" href="#tab-datos" role="tab">Datos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="tab-foto-link" data-toggle="tab" href="#tab-foto" role="tab">Foto</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="tab-password-link" data-toggle="tab" href="#tab-password" role="tab">Contraseña</a>
+                    </li>
+                </ul>
+
+                <div class="tab-content pt-3">
+
+                    <!-- Pestaña Datos -->
+                    <div class="tab-pane fade show active" id="tab-datos" role="tabpanel">
+                        <div class="form-group">
+                            <label for="pf_nombre">Nombre</label>
+                            <input type="text" class="form-control" id="pf_nombre"
+                                   value="<%= Html.esc(pf_nombre != null ? pf_nombre : "") %>" maxlength="100">
+                        </div>
+                        <div class="form-group">
+                            <label for="pf_apellido">Apellido</label>
+                            <input type="text" class="form-control" id="pf_apellido"
+                                   value="<%= Html.esc(pf_apellido != null ? pf_apellido : "") %>" maxlength="100">
+                        </div>
+                        <div id="msgDatos"></div>
+                        <button type="button" id="btnGuardarDatos" class="btn btn-primary btn-block">
+                            <i class="fas fa-save"></i> Guardar datos
+                        </button>
+                    </div>
+
+                    <!-- Pestaña Foto -->
+                    <div class="tab-pane fade" id="tab-foto" role="tabpanel">
+                        <div class="text-center mb-3">
+                            <img id="pf_preview" src="<%= Html.esc(pf_foto) %>" class="img-circle elevation-2"
+                                 style="width:120px;height:120px;object-fit:cover;border:2px solid #2E7D32;">
+                        </div>
+                        <div class="form-group">
+                            <label for="pf_archivo">Seleccionar nueva foto (JPG o PNG, Max. 2MB)</label>
+                            <input type="file" class="form-control-file" id="pf_archivo" accept="image/png, image/jpeg">
+                        </div>
+                        <div id="msgFoto"></div>
+                        <button type="button" id="btnGuardarFoto" class="btn btn-primary btn-block">
+                            <i class="fas fa-upload"></i> Subir foto
+                        </button>
+                    </div>
+
+                    <!-- Pestaña Contraseña -->
+                    <div class="tab-pane fade" id="tab-password" role="tabpanel">
+                        <div class="form-group">
+                            <label for="pf_pass_actual">Contraseña actual</label>
+                            <input type="password" class="form-control" id="pf_pass_actual">
+                        </div>
+                        <div class="form-group">
+                            <label for="pf_pass_nueva">Contraseña nueva</label>
+                            <input type="password" class="form-control" id="pf_pass_nueva" minlength="6">
+                        </div>
+                        <div class="form-group">
+                            <label for="pf_pass_confirmar">Confirmar contraseña nueva</label>
+                            <input type="password" class="form-control" id="pf_pass_confirmar" minlength="6">
+                        </div>
+                        <div id="msgPassword"></div>
+                        <button type="button" id="btnGuardarPassword" class="btn btn-primary btn-block">
+                            <i class="fas fa-key"></i> Cambiar contraseña
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
