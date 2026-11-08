@@ -171,30 +171,19 @@ body:not(.sidebar-collapse) .nav-sidebar .nav-treeview .nav-link > p,
 }
 .brand-link .nd-marca-nombre { font-size: 1.05rem; font-weight: 700; }
 .brand-link .nd-marca-sub { font-size: .68rem; font-weight: 400; color: #9ca3af; letter-spacing: .02em; }
-/* Menú minimizado: logo y foto de perfil centrados en la franja de íconos */
-.sidebar-mini.sidebar-collapse .main-sidebar:not(.sidebar-focused):not(:hover) .brand-link {
-    padding-left: 0;
-    padding-right: 0;
-    text-align: center;
-}
+/* Logo: el subtítulo va siempre debajo del nombre (AdminLTE lo pasa a inline-block al abrir el menú) */
+.main-sidebar .brand-link .brand-text.nd-marca { display: inline-flex !important; }
+/* Menú minimizado: logo y foto de perfil centrados en la franja de íconos (4.6rem).
+   Margen fijo, no centrado por ancho: así no se mueven mientras el menú se abre o se cierra. */
 .sidebar-mini.sidebar-collapse .main-sidebar:not(.sidebar-focused):not(:hover) .brand-link .brand-image {
-    float: none;
-    display: inline-block;
-    margin: 0;
     width: 36px;
     height: 36px;
-}
-.sidebar-mini.sidebar-collapse .main-sidebar:not(.sidebar-focused):not(:hover) .brand-link .brand-text { display: none; }
-.sidebar-mini.sidebar-collapse .main-sidebar:not(.sidebar-focused):not(:hover) .user-panel {
-    justify-content: center;
-    padding-left: 0;
-    padding-right: 0;
+    margin-left: calc((4.6rem - 36px) / 2 - 0.5rem);
+    margin-top: -3px;
 }
 .sidebar-mini.sidebar-collapse .main-sidebar:not(.sidebar-focused):not(:hover) .user-panel .image {
-    padding-left: 0;
-    padding-right: 0;
+    padding-left: calc((4.6rem - 45px) / 2 - 0.5rem);
 }
-.sidebar-mini.sidebar-collapse .main-sidebar:not(.sidebar-focused):not(:hover) .user-panel .info { display: none; }
 .user-panel .info a { color: #fff; }
 .user-panel .image img { border: 2px solid var(--nd-primary); }
 
