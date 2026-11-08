@@ -24,6 +24,9 @@
         <%-- Token CSRF: footer.jsp lo envía en todas las peticiones AJAX --%>
         <meta name="csrf-token" content="<%= Html.esc(Csrf.token(sesion))%>">
         <title>Ñanday SIAA - Gestión de Activos</title>
+        <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/imagenes/favicon.ico">
+        <link rel="icon" type="image/png" sizes="32x32" href="${pageContext.request.contextPath}/imagenes/favicon-32.png">
+        <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/imagenes/apple-touch-icon.png">
         <link rel="stylesheet" href="dist/css/source-sans-pro.css">
         <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
         <link rel="stylesheet" href="plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
@@ -213,8 +216,11 @@
             <!-- Menú lateral -->
             <aside class="main-sidebar sidebar-dark-primary elevation-4">
                 <a href="dashboard.jsp" class="brand-link">
-                    <img src="imagenes/logo_nanday.png" alt="Ñanday SIAA" class="brand-image img-circle elevation-3" style="opacity: .9">
-                    <span class="brand-text font-weight-light">Ñanday SIAA</span>
+                    <img src="imagenes/logo_ave.png" alt="Ñanday SIAA" class="brand-image nd-logo">
+                    <span class="brand-text nd-marca">
+                        <span class="nd-marca-nombre">Ñanday SIAA</span>
+                        <span class="nd-marca-sub">Gestión de activos e insumos</span>
+                    </span>
                 </a>
 
                 <div class="sidebar">

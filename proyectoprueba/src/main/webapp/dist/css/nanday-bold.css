@@ -150,6 +150,51 @@ body:not(.sidebar-collapse) .nav-sidebar .nav-treeview .nav-link > p,
     font-weight: 700;
 }
 .brand-image { border: 2px solid var(--nd-primary); }
+/* Logo del menú: ave en cuadrado blanco con nombre y subtítulo */
+.brand-link .brand-image.nd-logo {
+    background: #fff;
+    border: 0;
+    border-radius: 10px;
+    padding: 3px;
+    width: 40px;
+    height: 40px;
+    max-height: none;
+    margin-top: -6px;
+    opacity: 1;
+}
+.brand-link .nd-marca {
+    display: inline-flex;
+    flex-direction: column;
+    line-height: 1.1;
+    vertical-align: middle;
+    margin-top: -4px;
+}
+.brand-link .nd-marca-nombre { font-size: 1.05rem; font-weight: 700; }
+.brand-link .nd-marca-sub { font-size: .68rem; font-weight: 400; color: #9ca3af; letter-spacing: .02em; }
+/* Menú minimizado: logo y foto de perfil centrados en la franja de íconos */
+.sidebar-mini.sidebar-collapse .main-sidebar:not(.sidebar-focused):not(:hover) .brand-link {
+    padding-left: 0;
+    padding-right: 0;
+    text-align: center;
+}
+.sidebar-mini.sidebar-collapse .main-sidebar:not(.sidebar-focused):not(:hover) .brand-link .brand-image {
+    float: none;
+    display: inline-block;
+    margin: 0;
+    width: 36px;
+    height: 36px;
+}
+.sidebar-mini.sidebar-collapse .main-sidebar:not(.sidebar-focused):not(:hover) .brand-link .brand-text { display: none; }
+.sidebar-mini.sidebar-collapse .main-sidebar:not(.sidebar-focused):not(:hover) .user-panel {
+    justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
+}
+.sidebar-mini.sidebar-collapse .main-sidebar:not(.sidebar-focused):not(:hover) .user-panel .image {
+    padding-left: 0;
+    padding-right: 0;
+}
+.sidebar-mini.sidebar-collapse .main-sidebar:not(.sidebar-focused):not(:hover) .user-panel .info { display: none; }
 .user-panel .info a { color: #fff; }
 .user-panel .image img { border: 2px solid var(--nd-primary); }
 

@@ -5,6 +5,9 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Iniciar Sesión | Ñanday SIAA</title>
+        <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/imagenes/favicon.ico">
+        <link rel="icon" type="image/png" sizes="32x32" href="${pageContext.request.contextPath}/imagenes/favicon-32.png">
+        <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/imagenes/apple-touch-icon.png">
 
         <!-- Fuente Source Sans Pro -->
         <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/source-sans-pro.css">
