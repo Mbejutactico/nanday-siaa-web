@@ -90,13 +90,51 @@
                 padding-bottom: 10px;
                 margin-bottom: 20px;
             }
+
+            /* Campos del login: cada grupo es una sola caja (borde y redondeo en el grupo),
+               con línea divisoria entre el ícono, el campo y el botón para ver la contraseña */
+            .login-page .login-card-body .input-group {
+                flex-wrap: nowrap;
+                border: 1px solid #D5DED7;
+                border-radius: .5rem;
+                background-color: #FFFFFF;
+                overflow: hidden;
+                transition: border-color .15s ease, box-shadow .15s ease;
+            }
+            .login-page .login-card-body .input-group .input-group-text,
+            .login-page .login-card-body .input-group .form-control,
+            .login-page .login-card-body .input-group .btn-ojo {
+                border: 0;
+                border-radius: 0;
+                box-shadow: none;
+                background-color: #FFFFFF;
+            }
+            .login-page .login-card-body .input-group-prepend,
+            .login-page .login-card-body .input-group-append { margin: 0; }
+            .login-page .login-card-body .input-group .input-group-text {
+                color: #2E7D32;
+                border-right: 1px solid #D5DED7;
+                width: 2.75rem;
+                justify-content: center;
+            }
+            .login-page .login-card-body .input-group .btn-ojo {
+                color: #4B5563;
+                border-left: 1px solid #D5DED7;
+                width: 2.75rem;
+            }
+            .login-page .login-card-body .input-group .btn-ojo:hover { color: #2E7D32; }
+            /* Al escribir: solo el contorno del grupo se pone verde */
+            .login-page .login-card-body .input-group:focus-within {
+                border-color: #2E7D32;
+                box-shadow: 0 0 0 0.2rem rgba(46, 125, 50, 0.2);
+            }
         </style>
     </head>
     <body class="hold-transition login-page">
         <div class="login-box">
             <div class="login-logo">
                 <!-- Logo -->
-                <img src="imagenes/icono.png" alt="Logo Ńanday">
+                <img src="imagenes/logo_ave.png" alt="Logo Ñanday SIAA">
                 <a href="#"><b>Ñanday</b> SIAA</a>
             </div>
 
@@ -105,21 +143,22 @@
                     <p class="login-box-msg">Acceder al sistema</p>
 
                     <form id="formdata">
+                        <input type="hidden" id="tipo" name="tipo" value="login">
                         <div class="input-group mb-3">
-                            <input type="hidden" class="form-control" id="tipo" name="tipo" value="login">
-                            <input type="text" class="form-control" placeholder="Correo" id="usuario" name="usuario">
-                            <div class="input-group-append">
-                                <div class="input-group-text">
-                                    <span class="fas fa-envelope"></span>
-                                </div>
+                            <div class="input-group-prepend">
+                                <div class="input-group-text"><span class="fas fa-envelope"></span></div>
                             </div>
+                            <input type="text" class="form-control" placeholder="Correo" id="usuario" name="usuario">
                         </div>
                         <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text"><span class="fas fa-lock"></span></div>
+                            </div>
                             <input type="password" class="form-control" placeholder="Contraseña" id="pass" name="pass">
                             <div class="input-group-append">
-                                <div class="input-group-text">
-                                    <span class="fas fa-lock"></span>
-                                </div>
+                                <button type="button" class="btn btn-ojo" id="btnVerPass" title="Mostrar contraseña" aria-label="Mostrar contraseña">
+                                    <i class="fas fa-eye"></i>
+                                </button>
                             </div>
                         </div>
                         <div class="row">
@@ -169,6 +208,17 @@
                         $btn.prop("disabled", false).text("Ingresar");
                     }
                 });
+            });
+        </script>
+        <script>
+            // Mostrar u ocultar la contraseña
+            $('#btnVerPass').on('click', function () {
+                var campo = $('#pass');
+                var mostrar = campo.attr('type') === 'password';
+                campo.attr('type', mostrar ? 'text' : 'password');
+                $(this).find('i').toggleClass('fa-eye', !mostrar).toggleClass('fa-eye-slash', mostrar);
+                $(this).attr({title: mostrar ? 'Ocultar contraseña' : 'Mostrar contraseña', 'aria-label': mostrar ? 'Ocultar contraseña' : 'Mostrar contraseña'});
+                campo.trigger('focus');
             });
         </script>
     </body>
