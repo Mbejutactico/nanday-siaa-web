@@ -16,10 +16,14 @@
 
 %>
 <div class="content-wrapper">
+    <div class="content-header">
+        <div class="container-fluid">
+            <h1><i class="fas fa-shopping-cart"></i> Solicitud de Compra <small class="text-muted">(insumos y activos)</small></h1>
+        </div>
+    </div>
     <section class="content">
+        <div class="container-fluid">
         <form id="formSolicitud" method="post" class="form-horizontal" onsubmit="return false;">
-            <h3><i class="fa fa-shopping-cart"></i> Solicitud de Compra <small class="text-muted">(insumos y activos)</small></h3>
-            <hr>
 
             <div class="row">
                 <!-- Columna izquierda: datos de cabecera -->
@@ -144,6 +148,7 @@
                 </div>
             </div>
         </form>
+        </div>
     </section>
 </div>
 
